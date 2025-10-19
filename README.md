@@ -1,3 +1,18 @@
+# Drift-game
+# Descriere
+**Drift-game** este un joc în care trebuie sa ai grijă și să înveți cum trebuie
+să îți gestionezi fiecare set de pneuri pentru a putea să concurezi și să aduni 
+cât mai multe *puncte* în concursuri, mai exact în diferitele niveluri
+ale acestui joc. De asemenea pentru a putea să îți crești performanțele
+care vor rezulta în trecerea către alte niveluri care vor fi superioare,
+va trebui să îți selectezi alte tipuri de *pneuri* sau utilizarea unor pneuri noi
+care nu vor fi la fel de uzate ca cele pe care le vei avea la acel moment.
+
+Nu uita că viteza și precizia este tot ce contează pentru a ajunge
+la succesul mult dorit!
+
+
+
 # Nu primesc notă pentru că nu am pus titlu și descriere
 
 ### Folosiți template-ul corespunzător grupei voastre!
