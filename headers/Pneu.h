@@ -10,12 +10,12 @@
 
 class Pneu {
     public:
-    enum class Tip{Slick,Standard,SemiS};
+    enum class TipPneu{Slick,Standard,SemiS};
     private:
-    Tip tip;
+    TipPneu tip;
     float uzura;
     public:
-    Pneu(Tip tip, float uzura);
+    Pneu(TipPneu tip, float uzura);
     Pneu(const Pneu &alte);
     Pneu &operator=(const Pneu &alte);
     ~Pneu();

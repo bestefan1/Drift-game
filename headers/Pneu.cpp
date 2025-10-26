@@ -3,7 +3,7 @@
 //
 #include <iostream>
 #include "Pneu.h"
-Pneu::Pneu( Tip tip_parametru, float uzura_parametru)
+Pneu::Pneu( TipPneu tip_parametru, float uzura_parametru)
 :tip(tip_parametru),uzura(uzura_parametru){}
 
 Pneu::Pneu(const Pneu &alte)
@@ -21,9 +21,9 @@ Pneu::~Pneu(){}
 void Pneu::degradare(float distanta) {
     float coef=1.0f;
     switch (tip) {
-        case Tip::Slick: coef=2.0f; break;
-        case Tip::Standard: coef=1.0f; break;
-        case Tip::SemiS: coef=1.5f; break;
+        case TipPneu::Slick: coef=2.0f; break;
+        case TipPneu::Standard: coef=1.0f; break;
+        case TipPneu::SemiS: coef=1.5f; break;
     }
     uzura+=distanta*coef;
     if (uzura>100.0f) uzura=100.0f;
@@ -34,9 +34,9 @@ bool Pneu::uzat() const {
 void Pneu::afisare() const {
     std::cout<<"Tip: ";
     switch (tip) {
-        case Tip::Slick: std::cout<<"Slick"; break;
-        case Tip::Standard: std::cout<<"Standard"; break;
-        case Tip::SemiS: std::cout<<"SemiS"; break;
+        case TipPneu::Slick: std::cout<<"Slick"; break;
+        case TipPneu::Standard: std::cout<<"Standard"; break;
+        case TipPneu::SemiS: std::cout<<"SemiS"; break;
     }
     std::cout<<"uzura: "<<uzura<<"%"<<std::endl;
 }

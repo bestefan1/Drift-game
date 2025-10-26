@@ -4,11 +4,17 @@
 
 #ifndef MENIUJOC_H
 #define MENIUJOC_H
-
-
+#include "Masina.h"
+#include "Pneu.h"
+//#include <vector>
 
 class Meniujoc {
-
+    private:
+    Masina masina;
+    public:
+    Meniujoc();
+    void start();
+    void afisare() const;
 };
 
 

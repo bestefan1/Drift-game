@@ -10,12 +10,19 @@
 
 class Masina {
     public:
-    enum class Tip{Street,Stock,Drift};
+    enum class TipMasina{Street,Stock,Drift};
     private:
-    Tip tip;
+    TipMasina tip;
     float viteza;
     std::vector<Pneu> pneuri;
+    public:
+    Masina(TipMasina tip_parametru,float viteza_parametru,const std::vector<Pneu>& pneuri_parametru);
 
+    void deplasarep(float distanta);
+    void afisare() const;
+    bool verificarepneu() const;
+    void acceleratie(float coeficient);
+    void franare(float coeficient);
 
 
 };
