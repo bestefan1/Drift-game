@@ -34,11 +34,11 @@ bool Pneu::uzat() const {
 void Pneu::afisare() const {
     std::cout<<"Tip: ";
     switch (tip) {
-        case TipPneu::Slick: std::cout<<"Slick"; break;
-        case TipPneu::Standard: std::cout<<"Standard"; break;
-        case TipPneu::SemiS: std::cout<<"SemiS"; break;
+        case TipPneu::Slick: std::cout<<"Slick "; break;
+        case TipPneu::Standard: std::cout<<"Standard "; break;
+        case TipPneu::SemiS: std::cout<<"SemiS "; break;
     }
-    std::cout<<"uzura: "<<uzura<<"%"<<std::endl;
+    std::cout<<" uzura: "<<uzura<<"%"<<std::endl;
 }
 
 

@@ -9,9 +9,11 @@
 //#include <vector>
 
 class Meniujoc {
-    private:
+private:
     Masina masina;
-    public:
+public:
+    Masina& getMasina()
+{return masina;}
     Meniujoc();
     void start();
     void afisare() const;
