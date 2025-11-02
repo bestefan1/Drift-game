@@ -18,13 +18,13 @@ runs:
       shell: bash
       if: runner.os == 'macOS'
       run: |
-          brew install sfml
+          brew install sfml@2.6
 
     - name: Install Windows Dependencies
       shell: powershell
       if: runner.os == 'Windows'
       run: |
-            choco install sfml -y
+            choco install sfml --version=2.6.1 -y
     # Also see https://github.com/actions/runner-images/discussions/9446#discussioncomment-8668538
     - name: Install Clang ${{ matrix.clang_ver }}
       if: runner.os == 'Linux' && matrix.runs_msan == true
