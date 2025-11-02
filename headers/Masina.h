@@ -18,11 +18,12 @@ class Masina {
     bool verificarepneu() const;
     void acceleratie(float coeficient);
     void franare(float coeficient);
-    void initGraphics(sf::Vector2f pozitie, sf::Color culoare);
+    void initGraphics(sf::Vector2f pozitie, sf::Color culoare, const sf::Font& font);
     void handleInput(sf::Keyboard::Key key, bool isPressed);
     void update(sf::Time dt, sf::Vector2u windowBounds);
     void draw(sf::RenderWindow& window) const;
   //  [[nodiscard]] bool isMoving() const;
+    [[nodiscard]] std::string getTipAsString() const;
     private:
     TipMasina tip;
     float viteza;
@@ -37,6 +38,8 @@ class Masina {
     bool isMovingDown = false;
     bool isMovingLeft = false;
     bool isMovingRight = false;
+    sf::Text masinaTipText;
+    sf::Text pneuriTipText;
 };
 
 

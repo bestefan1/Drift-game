@@ -17,7 +17,14 @@ Pneu &Pneu::operator=(const Pneu &alte) {
     return *this;
 }
 //Pneu::~Pneu(){}
-
+std::string Pneu::getTipAsString() const {
+    switch (tip) {
+        case TipPneu::Slick:    return "Slick";
+        case TipPneu::Standard: return "Standard";
+        case TipPneu::SemiS:    return "SemiS";
+    }
+    return "Necunoscut";
+}
 void Pneu::degradare(float distanta) {
     float coef=1.0f;
     switch (tip) {

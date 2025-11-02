@@ -51,7 +51,7 @@ Meniujoc::Meniujoc()
     tirewarningtxt.setPosition(static_cast<float>(window.getSize().x) / 2.0f, 50.f);
     fadeOverlay.setSize(sf::Vector2f(window.getSize().x, window.getSize().y));
     fadeOverlay.setFillColor(sf::Color(0, 0, 0, 15));
-    masina.initGraphics({400, 300}, sf::Color::Red);
+    masina.initGraphics({400, 300}, sf::Color::Red,font);
 }
 
 void Meniujoc::setupMenu() {
@@ -251,7 +251,7 @@ void Meniujoc::setupMasinaFromConsole() {
         pneuri.push_back(Pneu(tipPneu, 0.0f));
     }
     masina= Masina(tipMasina,0.0f,pneuri);
-    masina.initGraphics(sf::Vector2f(window.getSize() / 2u), masinaColor);
+    masina.initGraphics(sf::Vector2f(window.getSize() / 2u), masinaColor,font);
 }
 
 void Meniujoc::afisare() const {

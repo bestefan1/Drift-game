@@ -17,11 +17,24 @@ isMovingLeft(false),
 isMovingRight(false)
 {
 }
-void Masina::initGraphics(sf::Vector2f pozitie, sf::Color culoare) {
+void Masina::initGraphics(sf::Vector2f pozitie, sf::Color culoare, const sf::Font& font) {
     shape.setSize({40.f, 60.f}); // dimensiuni masina
     shape.setFillColor(culoare);
     shape.setOrigin(shape.getSize() / 2.f); // origine in centru
     shape.setPosition(pozitie);
+
+    masinaTipText.setFont(font);
+    masinaTipText.setString("Masina: " + getTipAsString());
+    masinaTipText.setCharacterSize(18);
+    masinaTipText.setFillColor(sf::Color::White);
+
+    pneuriTipText.setFont(font);
+    if (!pneuri.empty()) { // Verificăm să nu fie gol vectorul
+        pneuriTipText.setString("Pneuri: " + pneuri[0].getTipAsString());
+    }
+    pneuriTipText.setCharacterSize(18);
+    pneuriTipText.setFillColor(sf::Color::White);
+
 }
 void Masina::handleInput(sf::Keyboard::Key key, bool isPressed) {
     if (key == sf::Keyboard::W) {
@@ -88,9 +101,14 @@ void Masina::update(sf::Time dt, sf::Vector2u windowBounds) {
         velocity.y = 0;
     }
     shape.setPosition(pos);
+    halfSize = shape.getSize() / 2.f;
+    masinaTipText.setPosition(pos.x - halfSize.x, pos.y - halfSize.y - 45);
+    pneuriTipText.setPosition(pos.x - halfSize.x, pos.y - halfSize.y - 25);
 }
 void Masina::draw(sf::RenderWindow &window) const {
     window.draw(shape);
+    window.draw(masinaTipText);
+    window.draw(pneuriTipText);
 }
 //bool Masina::isMoving() const {
  //   return isMovingUp || isMovingDown || isMovingLeft || isMovingRight;
@@ -100,6 +118,14 @@ void Masina::deplasarep(float distanta) {
     for (auto& p : pneuri) {
         p.degradare(distanta);
     }
+}
+std::string Masina::getTipAsString() const {
+    switch (tip) {
+        case TipMasina::Street: return "Street";
+        case TipMasina::Stock:  return "Stock";
+        case TipMasina::Drift:  return "Drift";
+    }
+    return "Necunoscut";
 }
 void Masina::afisare()const {
     std::cout<<"Tip masina: ";

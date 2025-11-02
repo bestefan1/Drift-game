@@ -4,7 +4,7 @@
 
 #ifndef PNEU_H
 #define PNEU_H
-
+#include <string>
 
 
 class Pneu {
@@ -17,7 +17,7 @@ class Pneu {
     void degradare(float distanta);
    [[nodiscard]] bool uzat() const;
     void afisare() const;
-
+    std::string getTipAsString() const;
     private:
     TipPneu tip;
     float uzura;
