@@ -4,18 +4,13 @@
 
 #ifndef MASINA_H
 #define MASINA_H
+#pragma once
 #include "Pneu.h"
-#include <iostream>
 #include <vector>
-
+#include <SFML/Graphics.hpp>
 class Masina {
     public:
     enum class TipMasina{Street,Stock,Drift};
-    private:
-    TipMasina tip;
-    float viteza;
-    std::vector<Pneu> pneuri;
-    public:
     Masina(TipMasina tip_parametru,float viteza_parametru,const std::vector<Pneu>& pneuri_parametru);
 
     void deplasarep(float distanta);
@@ -23,8 +18,24 @@ class Masina {
     bool verificarepneu() const;
     void acceleratie(float coeficient);
     void franare(float coeficient);
+    void initGraphics(sf::Vector2f pozitie, sf::Color culoare);
+    void handleInput(sf::Keyboard::Key key, bool isPressed);
+    void update(sf::Time dt, sf::Vector2u windowBounds);
+    void draw(sf::RenderWindow& window) const;
+    private:
+    TipMasina tip;
+    float viteza;
+    std::vector<Pneu> pneuri;
+    //vizual + fizici
+    sf::RectangleShape shape;
+    sf::Vector2f velocity;        // directie+viteza
+    float accelerationRate = 200.0f;
+    float dragFactor = 0.5f;         // coef incetinire
 
-
+    bool isMovingUp = false;
+    bool isMovingDown = false;
+    bool isMovingLeft = false;
+    bool isMovingRight = false;
 };
 
 

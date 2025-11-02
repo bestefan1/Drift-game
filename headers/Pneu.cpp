@@ -6,8 +6,8 @@
 Pneu::Pneu( TipPneu tip_parametru, float uzura_parametru)
 :tip(tip_parametru),uzura(uzura_parametru){}
 
-Pneu::Pneu(const Pneu &alte)
-    :tip(alte.tip),uzura(alte.uzura){}
+//Pneu::Pneu(const Pneu &alte)
+  //  :tip(alte.tip),uzura(alte.uzura){}
 
 Pneu &Pneu::operator=(const Pneu &alte) {
     if (this != &alte){
@@ -16,7 +16,7 @@ Pneu &Pneu::operator=(const Pneu &alte) {
     }
     return *this;
 }
-Pneu::~Pneu(){}
+//Pneu::~Pneu(){}
 
 void Pneu::degradare(float distanta) {
     float coef=1.0f;

@@ -4,24 +4,23 @@
 
 #ifndef PNEU_H
 #define PNEU_H
-#include <iostream>
-#include <string>
+
 
 
 class Pneu {
     public:
     enum class TipPneu{Slick,Standard,SemiS};
+    Pneu(TipPneu tip, float uzura);
+    Pneu(const Pneu &alte) = default;
+    Pneu &operator=(const Pneu &alte);
+    ~Pneu() = default;
+    void degradare(float distanta);
+   [[nodiscard]] bool uzat() const;
+    void afisare() const;
+
     private:
     TipPneu tip;
     float uzura;
-    public:
-    Pneu(TipPneu tip, float uzura);
-    Pneu(const Pneu &alte);
-    Pneu &operator=(const Pneu &alte);
-    ~Pneu();
-    void degradare(float distanta);
-    bool uzat() const;
-    void afisare() const;
 };
 
 

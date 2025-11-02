@@ -1,61 +1,197 @@
-
-#include "Pneu.h"
-#include "Masina.h"
 #include "Meniujoc.h"
 #include <iostream>
 #include <vector>
+
 Meniujoc::Meniujoc()
-    :masina(Masina::TipMasina::Street,0.0f,std::vector<Pneu>
-        { Pneu(Pneu::TipPneu::Standard,0.0f),
-          Pneu(Pneu::TipPneu::Standard,0.0f),
-            Pneu(Pneu::TipPneu::Standard,0.0f),
-            Pneu(Pneu::TipPneu::Standard,0.0f)
-        })
-{}
-void Meniujoc::start() {
+    : window(sf::VideoMode(800, 600), "Drift Game"),
+        gameState(GameState::MainMenu),
+       masina(Masina::TipMasina::Street, 0.0f,
+             { Pneu(Pneu::TipPneu::Standard, 0.0f), Pneu(Pneu::TipPneu::Standard, 0.0f),
+               Pneu(Pneu::TipPneu::Standard, 0.0f), Pneu(Pneu::TipPneu::Standard, 0.0f) })
+
+{
+
+    if (!font.loadFromFile("G:/clion/Drift-game/fonts/arial.ttf")) {
+        std::cerr << "Fontul nu a fost incarcat\n";
+        gameState = GameState::Exiting;
+        return;
+    }
+
+
+    setupMenu();
+    
+
+    masina.initGraphics({400, 300}, sf::Color::Red);
+}
+
+void Meniujoc::setupMenu() {
+    sf::Vector2f buttonSize(200, 50);
+    
+    // buton start
+    startButton.setSize(buttonSize);
+    startButton.setFillColor(sf::Color::Green);
+    startButton.setPosition(300, 200); // (800 - 200) / 2 = 300
+    
+    startButtonText.setFont(font);
+    startButtonText.setString("START");
+    startButtonText.setCharacterSize(24);
+    startButtonText.setFillColor(sf::Color::Black);
+    // centrare
+    sf::FloatRect textRect = startButtonText.getLocalBounds();
+    startButtonText.setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
+    startButtonText.setPosition(startButton.getPosition() + buttonSize / 2.f);
+
+    // buton exit
+    exitButton.setSize(buttonSize);
+    exitButton.setFillColor(sf::Color(180, 180, 180)); // Gri
+    exitButton.setPosition(300, 300);
+    
+    exitButtonText.setFont(font);
+    exitButtonText.setString("EXIT");
+    exitButtonText.setCharacterSize(24);
+    exitButtonText.setFillColor(sf::Color::Black);
+    textRect = exitButtonText.getLocalBounds();
+    exitButtonText.setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
+    exitButtonText.setPosition(exitButton.getPosition() + buttonSize / 2.f);
+}
+
+// bucla principala
+void Meniujoc::run() {
+    if (gameState == GameState::Exiting) return;
+
+    sf::Clock clock;
+    
+    while (window.isOpen()) {
+        sf::Time dt = clock.restart();
+        
+        processEvents();
+        update(dt);
+        render();
+    }
+}
+
+
+void Meniujoc::processEvents() {
+    sf::Event event{};
+    while (window.pollEvent(event)) {
+        if (event.type == sf::Event::Closed)
+            window.close();
+        if (event.type == sf::Event::KeyPressed) {
+            if (event.key.code == sf::Keyboard::Escape) {
+                window.close();
+            }
+        }
+
+        switch (gameState) {
+            case GameState::MainMenu:
+
+                if (event.type == sf::Event::MouseButtonPressed) {
+                    if (event.mouseButton.button == sf::Mouse::Left) {
+                        handleMenuClick({static_cast<float>(event.mouseButton.x), static_cast<float>(event.mouseButton.y)});
+                    }
+                }
+                break;
+            
+            case GameState::Playing:
+                if (event.type == sf::Event::KeyPressed)
+                    masina.handleInput(event.key.code, true);
+                if (event.type == sf::Event::KeyReleased)
+                    masina.handleInput(event.key.code, false);
+                break;
+            
+            case GameState::Exiting:
+                window.close();
+                break;
+        }
+    }
+}
+
+
+void Meniujoc::update(sf::Time dt) {
+    if (gameState == GameState::Playing) {
+        masina.update(dt, window.getSize());
+    }
+}
+
+
+void Meniujoc::render() {
+    window.clear(sf::Color(50, 50, 50));
+
+    switch (gameState) {
+        case GameState::MainMenu:
+            window.draw(startButton);
+            window.draw(startButtonText);
+            window.draw(exitButton);
+            window.draw(exitButtonText);
+            break;
+            
+        case GameState::Playing:
+            masina.draw(window);
+            break;
+        
+        case GameState::Exiting:
+            break;
+    }
+
+    window.display();
+}
+
+
+void Meniujoc::handleMenuClick(sf::Vector2f mousePos) {
+    if (startButton.getGlobalBounds().contains(mousePos)) {
+        std::cout << "Butonul START apasat!\n";
+        
+
+        setupMasinaFromConsole(); 
+        
+
+        gameState = GameState::Playing;
+    }
+
+    if (exitButton.getGlobalBounds().contains(mousePos)) {
+        std::cout << "Butonul EXIT apasat!\n";
+        window.close();
+    }
+}
+
+
+
+void Meniujoc::setupMasinaFromConsole() {
     int alege;
     std::cout<<"alege tip masina: 1=Street, 2=Stock, 3=Drift ";
     std::cin >> alege;
 
     Masina::TipMasina tipMasina;
     std::vector<Pneu> pneuri;
+    sf::Color masinaColor; // culoare implicita
+
     switch (alege) {
         case 1:
             tipMasina=Masina::TipMasina::Street;
-        pneuri={ Pneu(Pneu::TipPneu::Standard,0.0f),
-                 Pneu(Pneu::TipPneu::Standard,0.0f),
-                 Pneu(Pneu::TipPneu::Standard,0.0f),
-                 Pneu(Pneu::TipPneu::Standard,0.0f),
-        };
-        break;
+            pneuri={ Pneu(Pneu::TipPneu::Standard,0.0f), /*...*/ };
+           masinaColor = sf::Color::Blue;
+            break;
         case 2:
             tipMasina=Masina::TipMasina::Stock;
-        pneuri={ Pneu(Pneu::TipPneu::Slick,0.0f),
-        Pneu(Pneu::TipPneu::Slick,0.0f),
-        Pneu(Pneu::TipPneu::Slick,0.0f),
-        Pneu(Pneu::TipPneu::Slick,0.0f),
-        };
-        break;
+            pneuri={ Pneu(Pneu::TipPneu::Slick,0.0f), /*...*/ };
+            masinaColor = sf::Color::Yellow;
+            break;
         case 3:
             tipMasina=Masina::TipMasina::Drift;
-        pneuri={ Pneu(Pneu::TipPneu::SemiS,0.0f),
-        Pneu(Pneu::TipPneu::SemiS,0.0f),
-        Pneu(Pneu::TipPneu::SemiS,0.0f),
-        Pneu(Pneu::TipPneu::SemiS,0.0f),
-        };
-        break;
+            pneuri={ Pneu(Pneu::TipPneu::SemiS,0.0f), /*...*/ };
+            masinaColor = sf::Color::Magenta;
+            break;
         default:
             std::cout<<"invalid\n";
-        tipMasina=Masina::TipMasina::Street;
-        pneuri={ Pneu(Pneu::TipPneu::Standard,0.0f),
-        Pneu(Pneu::TipPneu::Standard,0.0f),
-        Pneu(Pneu::TipPneu::Standard,0.0f),
-        Pneu(Pneu::TipPneu::Standard,0.0f),
-        };
-        break;
+            tipMasina=Masina::TipMasina::Street;
+            pneuri={ Pneu(Pneu::TipPneu::Standard,0.0f), /*...*/ };
+            masinaColor = sf::Color::Red;
+            break;
     }
     masina= Masina(tipMasina,0.0f,pneuri);
+    masina.initGraphics(sf::Vector2f(window.getSize() / 2u), masinaColor);
 }
+
 void Meniujoc::afisare() const {
     masina.afisare();
 }
