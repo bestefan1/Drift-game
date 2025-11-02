@@ -30,7 +30,7 @@ void Meniujoc::setupMenu() {
     // buton start
     startButton.setSize(buttonSize);
     startButton.setFillColor(sf::Color::Green);
-    startButton.setPosition(300, 200); // (800 - 200) / 2 = 300
+    startButton.setPosition(300, 200);
     
     startButtonText.setFont(font);
     startButtonText.setString("START");
