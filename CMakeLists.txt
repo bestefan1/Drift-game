@@ -20,7 +20,7 @@ include(cmake/CompilerFlags.cmake)
 include(cmake/CopyHelper.cmake)
 
 set(SFML_DIR "G:/SFML-3.0.2-windows-gcc-14.2.0-mingw-64-bit/SFML-2.6.1/lib/cmake/SFML")
-find_package(SFML 2.6 COMPONENTS graphics window system REQUIRED)
+find_package(SFML 2.5.1 COMPONENTS graphics window system REQUIRED)
 
 ###############################################################################
 
