@@ -92,6 +92,9 @@ void Masina::update(sf::Time dt, sf::Vector2u windowBounds) {
 void Masina::draw(sf::RenderWindow &window) const {
     window.draw(shape);
 }
+//bool Masina::isMoving() const {
+ //   return isMovingUp || isMovingDown || isMovingLeft || isMovingRight;
+//}
 // cppcheck-suppress functionCanBeConst
 void Masina::deplasarep(float distanta) {
     for (auto& p : pneuri) {

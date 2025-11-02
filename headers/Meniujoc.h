@@ -32,6 +32,7 @@ private:
     sf::Sprite backgroundSprite;
 
     sf::Text tirewarningtxt;
+    sf::RectangleShape fadeOverlay;
     sf::Text gameTitleText;
     sf::Text timerText;
     sf::Clock gameClock;

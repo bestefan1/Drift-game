@@ -22,6 +22,7 @@ class Masina {
     void handleInput(sf::Keyboard::Key key, bool isPressed);
     void update(sf::Time dt, sf::Vector2u windowBounds);
     void draw(sf::RenderWindow& window) const;
+  //  [[nodiscard]] bool isMoving() const;
     private:
     TipMasina tip;
     float viteza;

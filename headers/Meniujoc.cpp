@@ -49,7 +49,8 @@ Meniujoc::Meniujoc()
     tirewarningtxt.setOrigin(textRect.left + textRect.width / 2.0f,
                               textRect.top + textRect.height / 2.0f);
     tirewarningtxt.setPosition(static_cast<float>(window.getSize().x) / 2.0f, 50.f);
-
+    fadeOverlay.setSize(sf::Vector2f(window.getSize().x, window.getSize().y));
+    fadeOverlay.setFillColor(sf::Color(0, 0, 0, 15));
     masina.initGraphics({400, 300}, sf::Color::Red);
 }
 
