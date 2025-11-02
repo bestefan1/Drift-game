@@ -1,7 +1,8 @@
 #include "Meniujoc.h"
 #include <iostream>
 #include <vector>
-
+#include <sstream>
+#include <iomanip>
 Meniujoc::Meniujoc()
     : window(sf::VideoMode(800, 600), "Drift Game"),
         gameState(GameState::MainMenu),
@@ -16,16 +17,34 @@ Meniujoc::Meniujoc()
         gameState = GameState::Exiting;
         return;
     }
+    //titlu
+    gameTitleText.setFont(font);
+    gameTitleText.setString("Drift Game");
+    gameTitleText.setCharacterSize(60);
+    gameTitleText.setFillColor(sf::Color::Yellow);
+    gameTitleText.setStyle(sf::Text::Bold | sf::Text::Underlined);
+
+
+    sf::FloatRect titleRect = gameTitleText.getLocalBounds();
+    gameTitleText.setOrigin(titleRect.left + titleRect.width / 2.0f,
+                            titleRect.top + titleRect.height / 2.0f);
+    gameTitleText.setPosition(window.getSize().x / 2.0f, 100.f);
+
+    //timer joc
+    timerText.setFont(font);
+    timerText.setString("Timp: 0.0s");
+    timerText.setCharacterSize(24);
+    timerText.setFillColor(sf::Color::White);
+    timerText.setPosition(10.f, 10.f);
 
 
     setupMenu();
     tirewarningtxt.setFont(font);
-    tirewarningtxt.setString("PNEURI UZATE!"); // Mesajul
+    tirewarningtxt.setString("PNEURI UZATE!");
     tirewarningtxt.setCharacterSize(40);
     tirewarningtxt.setFillColor(sf::Color::Red);
     tirewarningtxt.setStyle(sf::Text::Bold);
 
-    // Poziționează-l sus, pe centru
     sf::FloatRect textRect = tirewarningtxt.getLocalBounds();
     tirewarningtxt.setOrigin(textRect.left + textRect.width / 2.0f,
                               textRect.top + textRect.height / 2.0f);
@@ -120,6 +139,11 @@ void Meniujoc::processEvents() {
 void Meniujoc::update(sf::Time dt) {
     if (gameState == GameState::Playing) {
         masina.update(dt, window.getSize());
+        sf::Time elapsed = gameClock.getElapsedTime();
+
+        std::stringstream ss;
+        ss << "Timp: " << std::fixed << std::setprecision(1) << elapsed.asSeconds() << "s";
+        timerText.setString(ss.str());
     }
 }
 
@@ -129,6 +153,7 @@ void Meniujoc::render() {
 
     switch (gameState) {
         case GameState::MainMenu:
+            window.draw(gameTitleText);
             window.draw(startButton);
             window.draw(startButtonText);
             window.draw(exitButton);
@@ -137,6 +162,7 @@ void Meniujoc::render() {
             
         case GameState::Playing:
             masina.draw(window);
+            window.draw(timerText);
             if (masina.verificarepneu()) {
                 window.draw(tirewarningtxt);
             }
@@ -153,11 +179,8 @@ void Meniujoc::render() {
 void Meniujoc::handleMenuClick(sf::Vector2f mousePos) {
     if (startButton.getGlobalBounds().contains(mousePos)) {
         std::cout << "START!\n";
-        
-
-        setupMasinaFromConsole(); 
-        
-
+        setupMasinaFromConsole();
+        gameClock.restart();
         gameState = GameState::Playing;
     }
 

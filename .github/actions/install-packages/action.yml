@@ -10,7 +10,7 @@ runs:
       if: runner.os == 'Linux'
       run: |
         sudo apt-get update
-        sudo apt-get install -y ninja-build libsfml-dev 
+        sudo apt-get install -y ninja-build libsfml-dev xvfb
         # https://github.com/llvm/llvm-project/issues/78354
         sudo sysctl vm.mmap_rnd_bits=28
 
@@ -18,7 +18,7 @@ runs:
       shell: bash
       if: runner.os == 'macOS'
       run: |
-          brew install sfml@2.6
+          brew install sfml@2
 
     - name: Install Windows Dependencies
       shell: powershell
