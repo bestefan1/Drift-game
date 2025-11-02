@@ -19,7 +19,17 @@ Meniujoc::Meniujoc()
 
 
     setupMenu();
-    
+    tirewarningtxt.setFont(font);
+    tirewarningtxt.setString("PNEURI UZATE!"); // Mesajul
+    tirewarningtxt.setCharacterSize(40);
+    tirewarningtxt.setFillColor(sf::Color::Red);
+    tirewarningtxt.setStyle(sf::Text::Bold);
+
+    // Poziționează-l sus, pe centru
+    sf::FloatRect textRect = tirewarningtxt.getLocalBounds();
+    tirewarningtxt.setOrigin(textRect.left + textRect.width / 2.0f,
+                              textRect.top + textRect.height / 2.0f);
+    tirewarningtxt.setPosition(static_cast<float>(window.getSize().x) / 2.0f, 50.f);
 
     masina.initGraphics({400, 300}, sf::Color::Red);
 }
@@ -127,6 +137,9 @@ void Meniujoc::render() {
             
         case GameState::Playing:
             masina.draw(window);
+            if (masina.verificarepneu()) {
+                window.draw(tirewarningtxt);
+            }
             break;
         
         case GameState::Exiting:

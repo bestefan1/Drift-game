@@ -30,6 +30,8 @@ private:
 
     sf::Texture backgroundTexture;
     sf::Sprite backgroundSprite;
+
+    sf::Text tirewarningtxt;
     Masina masina;
     void processEvents();
 

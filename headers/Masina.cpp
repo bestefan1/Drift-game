@@ -7,9 +7,15 @@
 #include <cmath>
 #include <ranges>
 Masina::Masina(TipMasina tip_parametru, float viteza_parametru, const std::vector<Pneu> &pneuri_parametru):
-tip(tip_parametru), viteza(viteza_parametru), pneuri(pneuri_parametru) {
-    velocity = {0.f, 0.f};
-    isMovingUp = isMovingDown = isMovingLeft = isMovingRight = false;
+tip(tip_parametru),
+viteza(viteza_parametru),
+pneuri(pneuri_parametru),
+velocity{0.f, 0.f},
+isMovingUp(false),
+isMovingDown(false),
+isMovingLeft(false),
+isMovingRight(false)
+{
 }
 void Masina::initGraphics(sf::Vector2f pozitie, sf::Color culoare) {
     shape.setSize({40.f, 60.f}); // dimensiuni masina
@@ -18,10 +24,14 @@ void Masina::initGraphics(sf::Vector2f pozitie, sf::Color culoare) {
     shape.setPosition(pozitie);
 }
 void Masina::handleInput(sf::Keyboard::Key key, bool isPressed) {
-    if (key == sf::Keyboard::W)
+    if (key == sf::Keyboard::W) {
         isMovingUp = isPressed;
-    else if (key == sf::Keyboard::S)
+        if (isPressed) acceleratie(1.0f);
+    }
+    else if (key == sf::Keyboard::S) {
         isMovingDown = isPressed;
+        if (isPressed) franare(1.0f);
+    }
     else if (key == sf::Keyboard::A)
         isMovingLeft = isPressed;
     else if (key == sf::Keyboard::D)
@@ -45,7 +55,9 @@ void Masina::update(sf::Time dt, sf::Vector2u windowBounds) {
 
     //aceleratie
     velocity += movement * accelerationRate * dt.asSeconds();
-
+    sf::Vector2f frameMovement = velocity * dt.asSeconds();
+    float distance = std::sqrt(frameMovement.x * frameMovement.x + frameMovement.y * frameMovement.y);
+    deplasarep(distance);
     //drag
     velocity -= velocity * dragFactor * dt.asSeconds();
 
