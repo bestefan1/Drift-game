@@ -193,15 +193,15 @@ void Meniujoc::handleMenuClick(sf::Vector2f mousePos) {
 
 
 void Meniujoc::setupMasinaFromConsole() {
-    int alege;
+    int alegemasina;
     std::cout<<"alege tip masina: 1=Street, 2=Stock, 3=Drift ";
-    std::cin >> alege;
+    std::cin >> alegemasina;
 
     Masina::TipMasina tipMasina;
     std::vector<Pneu> pneuri;
     sf::Color masinaColor; // culoare implicita
 
-    switch (alege) {
+    switch (alegemasina) {
         case 1:
             tipMasina=Masina::TipMasina::Street;
             pneuri={ Pneu(Pneu::TipPneu::Standard,0.0f), /*...*/ };
@@ -223,6 +223,31 @@ void Meniujoc::setupMasinaFromConsole() {
             pneuri={ Pneu(Pneu::TipPneu::Standard,0.0f), /*...*/ };
             masinaColor = sf::Color::Red;
             break;
+    }
+    int alegePneu;
+    std::cout << "Alege tip pneuri: 1=Standard, 2=Slick, 3=SemiS: ";
+    std::cin >> alegePneu;
+
+    Pneu::TipPneu tipPneu; // Stocăm alegerea pneului aici
+
+    switch (alegePneu) {
+        case 1:
+            tipPneu = Pneu::TipPneu::Standard;
+        break;
+        case 2:
+            tipPneu = Pneu::TipPneu::Slick;
+        break;
+        case 3:
+            tipPneu = Pneu::TipPneu::SemiS;
+        break;
+        default:
+            std::cout << "invalid\n";
+        tipPneu = Pneu::TipPneu::Standard;
+        break;
+    }
+
+    for (int i = 0; i < 4; ++i) {
+        pneuri.push_back(Pneu(tipPneu, 0.0f));
     }
     masina= Masina(tipMasina,0.0f,pneuri);
     masina.initGraphics(sf::Vector2f(window.getSize() / 2u), masinaColor);

@@ -3,8 +3,8 @@
 int main() {
     Meniujoc joc;
     joc.run();
-    //pentru alegere masina se alege din consola
+    //pentru alegere masina/pneuri se alege din consola
     //escape pentru iesire
-    //wasd comenzi
+    //wasd controale joc
     return 0;
 }
