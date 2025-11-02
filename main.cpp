@@ -5,5 +5,6 @@ int main() {
     joc.run();
     //pentru alegere masina se alege din consola
     //escape pentru iesire
+    //wasd comenzi
     return 0;
 }
