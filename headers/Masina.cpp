@@ -80,7 +80,7 @@ void Masina::update(sf::Time dt, sf::Vector2u windowBounds) {
 void Masina::draw(sf::RenderWindow &window) const {
     window.draw(shape);
 }
-
+// cppcheck-suppress functionCanBeConst
 void Masina::deplasarep(float distanta) {
     for (auto& p : pneuri) {
         p.degradare(distanta);
