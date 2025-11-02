@@ -139,7 +139,7 @@ void Meniujoc::render() {
 
 void Meniujoc::handleMenuClick(sf::Vector2f mousePos) {
     if (startButton.getGlobalBounds().contains(mousePos)) {
-        std::cout << "Butonul START apasat!\n";
+        std::cout << "START!\n";
         
 
         setupMasinaFromConsole(); 
@@ -149,7 +149,7 @@ void Meniujoc::handleMenuClick(sf::Vector2f mousePos) {
     }
 
     if (exitButton.getGlobalBounds().contains(mousePos)) {
-        std::cout << "Butonul EXIT apasat!\n";
+        std::cout << "exit...\n";
         window.close();
     }
 }

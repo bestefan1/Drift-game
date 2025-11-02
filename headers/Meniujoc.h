@@ -27,6 +27,9 @@ private:
 
     sf::RectangleShape exitButton;
     sf::Text exitButtonText;
+
+    sf::Texture backgroundTexture;
+    sf::Sprite backgroundSprite;
     Masina masina;
     void processEvents();
 
