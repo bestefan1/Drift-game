@@ -4,18 +4,49 @@
 
 #ifndef MENIUJOC_H
 #define MENIUJOC_H
+#pragma once
 #include "Masina.h"
-#include "Pneu.h"
+#include <SFML/Graphics.hpp>
 //#include <vector>
 
 class Meniujoc {
-private:
-    Masina masina;
 public:
-    Masina& getMasina()
-{return masina;}
+    enum class GameState{MainMenu,Playing,Exiting};
     Meniujoc();
-    void start();
+    void run();
+    //Masina& getMasina()
+    //{return masina;}
+//    void afisare() const;
+private:
+    sf::RenderWindow window;
+    sf::Font font;
+    GameState gameState;
+    //elemente meniu
+    sf::RectangleShape startButton;
+    sf::Text startButtonText;
+
+    sf::RectangleShape exitButton;
+    sf::Text exitButtonText;
+
+    sf::Texture backgroundTexture;
+    sf::Sprite backgroundSprite;
+
+    sf::Text tirewarningtxt;
+    sf::RectangleShape fadeOverlay;
+    sf::Text gameTitleText;
+    sf::Text timerText;
+    sf::Clock gameClock;
+    Masina masina;
+    void processEvents();
+
+    //functie loop
+    void update(sf::Time dt);
+
+    //functie loop render
+    void render();
+    void setupMenu(); // init
+    void handleMenuClick(sf::Vector2f mousePos);
+    void setupMasinaFromConsole();
     void afisare() const;
 };
 

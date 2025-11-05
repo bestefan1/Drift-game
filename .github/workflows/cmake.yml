@@ -57,7 +57,8 @@ jobs:
       - name: Checkout repo
         # renovate: datasource=github-tags depName=actions/checkout versioning=loose
         uses: actions/checkout@v5.0.0
-
+      - name: Install packages
+        uses: ./.github/actions/install-packages
       - name: Run cppcheck
         uses: ./.github/actions/cppcheck
 
@@ -74,7 +75,8 @@ jobs:
       - name: Checkout repo
         # renovate: datasource=github-tags depName=actions/checkout versioning=loose
         uses: actions/checkout@v5.0.0
-
+      - name: Install packages
+        uses: ./.github/actions/install-packages
       - name: Run clang-tidy
         uses: ./.github/actions/clang-tidy
 

@@ -19,6 +19,9 @@ include(cmake/Options.cmake)
 include(cmake/CompilerFlags.cmake)
 include(cmake/CopyHelper.cmake)
 
+set(SFML_DIR "G:/SFML-3.0.2-windows-gcc-14.2.0-mingw-64-bit/SFML-2.6.1/lib/cmake/SFML")
+find_package(SFML 2.5.1 COMPONENTS graphics window system REQUIRED)
+
 ###############################################################################
 
 # external dependencies with FetchContent
@@ -61,6 +64,8 @@ add_executable(${MAIN_EXECUTABLE_NAME}
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )
 # NOTE: RUN_SANITIZERS is optional, if it's not present it will default to true
 set_compiler_flags(RUN_SANITIZERS TRUE TARGET_NAMES ${MAIN_EXECUTABLE_NAME})
+
+target_link_libraries(${MAIN_EXECUTABLE_NAME} PRIVATE sfml-graphics sfml-window sfml-system)
 # set_compiler_flags(TARGET_NAMES ${MAIN_EXECUTABLE_NAME} ${FOO} ${BAR})
 # where ${FOO} and ${BAR} represent additional executables or libraries
 # you want to compile with the set compiler flags
