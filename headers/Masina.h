@@ -8,6 +8,7 @@
 #include "Pneu.h"
 #include <vector>
 #include <SFML/Graphics.hpp>
+
 class Masina {
     public:
     enum class TipMasina{Street,Stock,Drift};
