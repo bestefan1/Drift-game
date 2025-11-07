@@ -11,7 +11,7 @@
 
 class Meniujoc {
 public:
-    enum class GameState{MainMenu,Playing,Exiting};
+    enum class GameState{MainMenu,Playing,Paused,Exiting};
     Meniujoc();
     void run();
     //Masina& getMasina()
@@ -36,6 +36,7 @@ private:
     sf::Text gameTitleText;
     sf::Text timerText;
     sf::Clock gameClock;
+    sf::Text pauseText;
     Masina masina;
     void processEvents();
 
@@ -47,6 +48,7 @@ private:
     void setupMenu(); // init
     void handleMenuClick(sf::Vector2f mousePos);
     void setupMasinaFromConsole();
+    void restartGame();
     void afisare() const;
 };
 

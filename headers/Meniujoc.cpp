@@ -52,6 +52,18 @@ Meniujoc::Meniujoc()
     tirewarningtxt.setPosition(static_cast<float>(window.getSize().x) / 2.0f, 50.f);
     fadeOverlay.setSize(sf::Vector2f(static_cast<float>(window.getSize().x),static_cast<float> (window.getSize().y)));
     fadeOverlay.setFillColor(sf::Color(0, 0, 0, 15));
+
+    pauseText.setFont(font);
+    pauseText.setString("PAUZA");
+    pauseText.setCharacterSize(70);
+    pauseText.setFillColor(sf::Color::White);
+    pauseText.setStyle(sf::Text::Bold);
+
+    sf::FloatRect pauseRect = pauseText.getLocalBounds();
+    pauseText.setOrigin(pauseRect.left + pauseRect.width / 2.0f,
+                        pauseRect.top + pauseRect.height / 2.0f);
+    pauseText.setPosition(static_cast<float>(window.getSize().x) / 2.0f, static_cast<float>(window.getSize().y) / 2.0f);
+
     masina.initGraphics({400, 300}, sf::Color::Red,font);
 }
 
@@ -111,6 +123,16 @@ void Meniujoc::processEvents() {
             if (event.key.code == sf::Keyboard::Escape) {
                 window.close();
             }
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::R) {
+                restartGame();
+            }
+            if (event.key.code == sf::Keyboard::P) {
+                if (gameState == GameState::Playing) {
+                    gameState = GameState::Paused;
+                } else if (gameState == GameState::Paused) {
+                    gameState = GameState::Playing;
+                }
+            }
         }
 
         switch (gameState) {
@@ -129,9 +151,12 @@ void Meniujoc::processEvents() {
                 if (event.type == sf::Event::KeyReleased)
                     masina.handleInput(event.key.code, false);
                 break;
-            
+            case GameState::Paused:
+                break;
             case GameState::Exiting:
                 window.close();
+                break;
+            default:
                 break;
         }
     }
@@ -141,8 +166,8 @@ void Meniujoc::processEvents() {
 void Meniujoc::update(sf::Time dt) {
     if (gameState == GameState::Playing) {
         masina.update(dt, window.getSize());
-        sf::Time elapsed = gameClock.getElapsedTime();
 
+        sf::Time elapsed = gameClock.getElapsedTime();
         std::stringstream ss;
         ss << "Timp: " << std::fixed << std::setprecision(1) << elapsed.asSeconds() << "s";
         timerText.setString(ss.str());
@@ -156,22 +181,27 @@ void Meniujoc::render() {
     switch (gameState) {
         case GameState::MainMenu:
             window.draw(gameTitleText);
-            window.draw(startButton);
-            window.draw(startButtonText);
-            window.draw(exitButton);
-            window.draw(exitButtonText);
-            break;
-            
+        window.draw(startButton);
+        window.draw(startButtonText);
+        window.draw(exitButton);
+        window.draw(exitButtonText);
+        break;
+
         case GameState::Playing:
+        case GameState::Paused:
             masina.draw(window);
-            window.draw(timerText);
-            if (masina.verificarepneu()) {
-                window.draw(tirewarningtxt);
-            }
-            break;
+        window.draw(timerText);
+        if (masina.verificarepneu()) {
+            window.draw(tirewarningtxt);
+        }
+        if (gameState == GameState::Paused) {
+            window.draw(pauseText);
+        }
+        break;
         
         case GameState::Exiting:
             break;
+
     }
 
     window.display();
@@ -191,7 +221,11 @@ void Meniujoc::handleMenuClick(sf::Vector2f mousePos) {
         window.close();
     }
 }
-
+void Meniujoc::restartGame() {
+    std::cout << "Restart"<<std::endl;
+    setupMasinaFromConsole();
+    gameClock.restart();
+}
 
 //actual setup din file
 void Meniujoc::setupMasinaFromConsole() {
