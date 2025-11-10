@@ -61,7 +61,7 @@ void Masina::update(sf::Time dt, sf::Vector2u windowBounds) {
         movement /= length;
 
     //aceleratie
-    velocity += movement * accelerationRate * dt.asSeconds();
+    velocity += movement * (motor.getCoefAcceleratie()*35.0f) * dt.asSeconds();
     sf::Vector2f frameMovement = velocity * dt.asSeconds();
     float distance = std::sqrt(frameMovement.x * frameMovement.x + frameMovement.y * frameMovement.y);
     deplasarep(distance);

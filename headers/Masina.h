@@ -34,7 +34,7 @@ class Masina {
     //vizual + fizici
     sf::RectangleShape shape;
     sf::Vector2f velocity;        // directie+viteza
-    float accelerationRate = 200.0f;
+    //float accelerationRate = 200.0f;
     float dragFactor = 0.5f;         // coef incetinire
 
     bool isMovingUp = false;
