@@ -1,8 +1,9 @@
 //
 // Created by Stefan King on 10/26/2025.
 //
-#include <iostream>
 #include "Pneu.h"
+#include <ostream>
+#include <iomanip>
 Pneu::Pneu( TipPneu tip_parametru, float uzura_parametru)
 :tip(tip_parametru),uzura(uzura_parametru){}
 
@@ -38,7 +39,7 @@ void Pneu::degradare(float distanta) {
 bool Pneu::uzat() const {
     return uzura >=100.0f;
 }
-void Pneu::afisare() const {
+/*void Pneu::afisare() const {
     std::cout<<"Tip: ";
     switch (tip) {
         case TipPneu::Slick: std::cout<<"Slick "; break;
@@ -47,5 +48,15 @@ void Pneu::afisare() const {
     }
     std::cout<<" uzura: "<<uzura<<"%"<<std::endl;
 }
-
+*/
+std::ostream& operator<<(std::ostream& os, const Pneu& p) {
+    os << "Pneu: ";
+    switch (p.tip) {
+        case Pneu::TipPneu::Slick:    os << "Slick"; break;
+        case Pneu::TipPneu::Standard: os << "Standard"; break;
+        case Pneu::TipPneu::SemiS:    os << "SemiS"; break;
+    }
+    os << " (Uzura: " << std::fixed << std::setprecision(1) << p.uzura << "%)";
+    return os;
+}
 

@@ -16,11 +16,12 @@ class Pneu {
     ~Pneu() = default;
     void degradare(float distanta);
    [[nodiscard]] bool uzat() const;
-    void afisare() const;
+   // void afisare() const;
     std::string getTipAsString() const;
     private:
     TipPneu tip;
     float uzura;
+    friend std::ostream& operator<<(std::ostream& os, const Pneu& p);
 };
 
 

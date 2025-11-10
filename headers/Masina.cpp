@@ -6,17 +6,11 @@
 #include <iostream>
 #include <cmath>
 #include <ranges>
-Masina::Masina(TipMasina tip_parametru, float viteza_parametru, const std::vector<Pneu> &pneuri_parametru):
-tip(tip_parametru),
-viteza(viteza_parametru),
-pneuri(pneuri_parametru),
-velocity{0.f, 0.f},
-isMovingUp(false),
-isMovingDown(false),
-isMovingLeft(false),
-isMovingRight(false)
+Masina::Masina(TipMasina tip_parametru, float viteza_parametru, const std::vector<Pneu> &pneuri_parametru, Motor::TipMotor tip_motor_parametru):
+tip(tip_parametru), viteza(viteza_parametru), pneuri(pneuri_parametru), motor(tip_motor_parametru), velocity{0.f, 0.f}, isMovingUp(false), isMovingDown(false), isMovingLeft(false), isMovingRight(false)
 {
 }
+
 void Masina::initGraphics(sf::Vector2f pozitie, sf::Color culoare, const sf::Font& font) {
     shape.setSize({40.f, 60.f}); // dimensiuni masina
     shape.setFillColor(culoare);
@@ -127,7 +121,7 @@ std::string Masina::getTipAsString() const {
     }
     return "Necunoscut";
 }
-void Masina::afisare()const {
+/*void Masina::afisare()const {
     std::cout<<"Tip masina: ";
     switch (tip) {
         case TipMasina::Street: std::cout<<"Street: ";break;
@@ -141,6 +135,7 @@ void Masina::afisare()const {
         p.afisare();
     }
 }
+*/
 bool Masina::verificarepneu() const {
     return std::ranges::any_of(pneuri,&Pneu::uzat);
 }
@@ -150,6 +145,15 @@ void Masina::acceleratie(float coeficient) {
 void Masina::franare(float coeficient) {
     viteza-=coeficient;
     if (viteza<0) viteza=0;
+}
+std::ostream& operator<<(std::ostream& os, const Masina& m) {
+    os<<"Masina tip: "<<m.getTipAsString()<<"\n";
+    os<<m.motor<<"\n";
+    os<<"Pneuri tip: "<<m.pneuri.size()<<"\n";
+    for (const auto& pneu : m.pneuri) {
+        os<<" "<<pneu<<"\n";
+    }
+    return os;
 }
 
 

@@ -4,16 +4,17 @@
 #include <sstream>
 #include <fstream>
 #include <iomanip>
+#include <ostream>
 Meniujoc::Meniujoc()
     : window(sf::VideoMode(800, 600), "Drift Game"),
         gameState(GameState::MainMenu),
        masina(Masina::TipMasina::Street, 0.0f,
              { Pneu(Pneu::TipPneu::Standard, 0.0f), Pneu(Pneu::TipPneu::Standard, 0.0f),
-               Pneu(Pneu::TipPneu::Standard, 0.0f), Pneu(Pneu::TipPneu::Standard, 0.0f) })
+               Pneu(Pneu::TipPneu::Standard, 0.0f), Pneu(Pneu::TipPneu::Standard, 0.0f)}, Motor::TipMotor::Stock)
 
 {
 
-    if (!font.loadFromFile("G:/clion/Drift-game/fonts/arial.ttf")) {
+    if (!font.loadFromFile("fonts/arial.ttf")) {
         std::cerr << "Fontul nu a fost incarcat\n";
         gameState = GameState::Exiting;
         return;
@@ -201,6 +202,8 @@ void Meniujoc::render() {
         
         case GameState::Exiting:
             break;
+        default:
+            break;
 
     }
 
@@ -232,6 +235,7 @@ void Meniujoc::setupMasinaFromConsole() {
 
     int alegemasina = 1;
     int alegepneu = 1;
+    int alegemotor = 1;
     std::cout<<"Alege tip masina: 1=Street, 2=Stock, 3=Drift\n";
     std::cout << "Alege tip pneuri: 1=Standard, 2=Slick, 3=SemiS\n";
     std::ifstream file("tastatura.txt");
@@ -239,14 +243,16 @@ void Meniujoc::setupMasinaFromConsole() {
         std::cerr<<"err"<<std::endl;
         alegemasina = 1;
         alegepneu = 1;
+        alegemotor = 1;
     } else {
-        if (file>>alegemasina>>alegepneu) {
-            std::cout<<"config masina:"<<alegemasina<<"  "<<alegepneu<<std::endl;
+        if (file>>alegemasina>>alegepneu>>alegemotor) {
+            std::cout<<"config masina:"<<alegemasina<<"  "<<alegepneu<<"  "<<alegemotor<<std::endl;
         }
         else {
             std::cerr<<"err"<<std::endl;
             alegemasina = 1;
             alegepneu = 1;
+            alegemotor = 1;
         }
         file.close();
     }
@@ -294,14 +300,49 @@ void Meniujoc::setupMasinaFromConsole() {
         tipPneu = Pneu::TipPneu::Standard;
         break;
     }
+    Motor::TipMotor tipMotor;
+    switch (alegemotor) {
+        case 1: tipMotor = Motor::TipMotor::Stock; break;
+        case 2: tipMotor = Motor::TipMotor::Sport; break;
+        case 3: tipMotor = Motor::TipMotor::Drift; break;
+        default:
+            std::cout << "invalid\n";
+            tipMotor = Motor::TipMotor::Stock;
+            break;
+    }
 
     for (int i = 0; i < 4; ++i) {
         pneuri.emplace_back(tipPneu, 0.0f);
     }
-    masina= Masina(tipMasina,0.0f,pneuri);
+    masina= Masina(tipMasina,0.0f,pneuri,tipMotor);
     masina.initGraphics(sf::Vector2f(window.getSize() / 2u), masinaColor,font);
 }
 
-void Meniujoc::afisare() const {
+/*void Meniujoc::afisare() const {
     masina.afisare();
+}
+*/
+std::ostream& operator<<(std::ostream& os, const Meniujoc& joc) {
+    os<<"STARE JOC:\n";
+    os<<"Starea curenta:";
+    switch (joc.gameState) {
+        case Meniujoc::GameState::MainMenu:
+            os<<"Meniujoc::GameState::MainMenu";
+            break;
+        case Meniujoc::GameState::Playing:
+            os<<"Meniujoc::GameState::Playing";
+            break;
+        case Meniujoc::GameState::Paused:
+            os<<"Meniujoc::GameState::Paused";
+            break;
+        case Meniujoc::GameState::Exiting:
+            os<<"Meniujoc::GameState::Exiting";
+            break;
+        default:
+            os<<"invalid\n";
+            break;
+    }
+    os<<"\n\n";
+    os<<joc.masina;
+return os;
 }
