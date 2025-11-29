@@ -6,16 +6,17 @@
 #define MASINA_H
 #pragma once
 #include "Pneu.h"
+#include "Motor.h"
 #include <vector>
 #include <SFML/Graphics.hpp>
 
 class Masina {
     public:
     enum class TipMasina{Street,Stock,Drift};
-    Masina(TipMasina tip_parametru,float viteza_parametru,const std::vector<Pneu>& pneuri_parametru);
+    Masina(TipMasina tip_parametru,float viteza_parametru,const std::vector<Pneu>& pneuri_parametru, Motor::TipMotor tip_motor_parametru);
 
     void deplasarep(float distanta);
-    void afisare() const;
+    //void afisare() const;
     bool verificarepneu() const;
     void acceleratie(float coeficient);
     void franare(float coeficient);
@@ -23,16 +24,17 @@ class Masina {
     void handleInput(sf::Keyboard::Key key, bool isPressed);
     void update(sf::Time dt, sf::Vector2u windowBounds);
     void draw(sf::RenderWindow& window) const;
-  //  [[nodiscard]] bool isMoving() const;
+    //[[nodiscard]] bool isMoving() const;
     [[nodiscard]] std::string getTipAsString() const;
     private:
     TipMasina tip;
     float viteza;
     std::vector<Pneu> pneuri;
+    Motor motor;
     //vizual + fizici
     sf::RectangleShape shape;
     sf::Vector2f velocity;        // directie+viteza
-    float accelerationRate = 200.0f;
+    //float accelerationRate = 200.0f;
     float dragFactor = 0.5f;         // coef incetinire
 
     bool isMovingUp = false;
@@ -41,6 +43,7 @@ class Masina {
     bool isMovingRight = false;
     sf::Text masinaTipText;
     sf::Text pneuriTipText;
+    friend std::ostream& operator<<(std::ostream& os, const Masina& m);
 };
 
 

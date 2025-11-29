@@ -49,7 +49,8 @@ private:
     void handleMenuClick(sf::Vector2f mousePos);
     void setupMasinaFromConsole();
     void restartGame();
-    void afisare() const;
+    //void afisare() const;
+    friend std::ostream& operator<<(std::ostream& os, const Meniujoc& joc);
 };
 
 

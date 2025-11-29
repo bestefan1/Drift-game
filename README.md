@@ -10,6 +10,11 @@ care nu vor fi la fel de uzate ca cele pe care le vei avea la acel moment.
 
 Nu uita că viteza și precizia este tot ce contează pentru a ajunge
 la succesul mult dorit!
+**Controale**
+W,A,S,D-directie
+R-restart
+P-pauza
+Escape-iesire
 
 
 ### Tema 0
