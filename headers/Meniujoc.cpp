@@ -13,7 +13,7 @@ Meniujoc::Meniujoc()
                Pneu(Pneu::TipPneu::Standard, 0.0f), Pneu(Pneu::TipPneu::Standard, 0.0f)}, Motor::TipMotor::Stock)
 
 {
-
+    window.setFramerateLimit(30);
     if (!font.loadFromFile("fonts/arial.ttf")) {
         std::cerr << "Fontul nu a fost incarcat\n";
         gameState = GameState::Exiting;
