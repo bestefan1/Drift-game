@@ -31,7 +31,7 @@ void Pneu::degradare(float distanta) {
     switch (tip) {
         case TipPneu::Slick: coef=0.015f; break;
         case TipPneu::Standard: coef=0.003f; break;
-        case TipPneu::SemiS: coef=0.001; break;
+        case TipPneu::SemiS: coef=0.001f; break;
     }
     uzura+=distanta*coef;
     if (uzura>100.0f) uzura=100.0f;
