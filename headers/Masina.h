@@ -31,11 +31,14 @@ class Masina {
     float viteza;
     std::vector<Pneu> pneuri;
     Motor motor;
+    float steeringAngle=0;
+    static constexpr float maxSteer=25.0f;
+    static constexpr float steerSpeed=120.0f;
     //vizual + fizici
     sf::RectangleShape shape;
     sf::Vector2f velocity;        // directie+viteza
     //float accelerationRate = 200.0f;
-    float dragFactor = 0.5f;         // coef incetinire
+    float dragFactor = 1.2f;         // coef incetinire
 
     bool isMovingUp = false;
     bool isMovingDown = false;

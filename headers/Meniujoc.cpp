@@ -41,6 +41,7 @@ Meniujoc::Meniujoc()
 
 
     setupMenu();
+    setupConfigMenu();
     tirewarningtxt.setFont(font);
     tirewarningtxt.setString("PNEURI UZATE!");
     tirewarningtxt.setCharacterSize(40);
@@ -85,10 +86,21 @@ void Meniujoc::setupMenu() {
     startButtonText.setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
     startButtonText.setPosition(startButton.getPosition() + buttonSize / 2.f);
 
+    //buton configmasina
+    configButton.setSize(buttonSize);
+    configButton.setFillColor(sf::Color(100,100,250));
+    configButton.setPosition(300,270);
+    configButtonText.setFont(font);
+    configButtonText.setString("CONFIG");
+    configButtonText.setCharacterSize(24);
+    configButtonText.setFillColor(sf::Color::White);
+    sf::FloatRect configRect = configButton.getLocalBounds();
+    configButtonText.setOrigin(configRect.left+configRect.width/ 2.0f,configRect.top + configRect.height / 2.0f);
+    configButtonText.setPosition(configButton.getPosition() + buttonSize / 2.f);
     // buton exit
     exitButton.setSize(buttonSize);
     exitButton.setFillColor(sf::Color(180, 180, 180)); // Gri
-    exitButton.setPosition(300, 300);
+    exitButton.setPosition(300, 340);
     
     exitButtonText.setFont(font);
     exitButtonText.setString("EXIT");
@@ -97,6 +109,45 @@ void Meniujoc::setupMenu() {
     textRect = exitButtonText.getLocalBounds();
     exitButtonText.setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
     exitButtonText.setPosition(exitButton.getPosition() + buttonSize / 2.f);
+}
+void Meniujoc::setupConfigMenu() {
+    configTitle.setFont(font);
+    configTitle.setString("CONFIGURATIE MASINA");
+    configTitle.setCharacterSize(45);
+    configTitle.setFillColor(sf::Color::Cyan);
+    configTitle.setPosition(260, 50);
+
+    carOptionText.setFont(font);
+    carOptionText.setCharacterSize(30);
+    carOptionText.setPosition(250, 180);
+
+    tireOptionText.setFont(font);
+    tireOptionText.setCharacterSize(30);
+    tireOptionText.setPosition(250, 250);
+
+    motorOptionText.setFont(font);
+    motorOptionText.setCharacterSize(30);
+    motorOptionText.setPosition(250, 320);
+
+    backButton.setSize({200,50});
+    backButton.setFillColor(sf::Color::Red);
+    backButton.setPosition(300, 450);
+
+    backButtonText.setFont(font);
+    backButtonText.setString("SAVE");
+    backButtonText.setCharacterSize(24);
+    backButtonText.setPosition(345, 460);
+
+    updateConfigStrings();
+}
+void Meniujoc::updateConfigStrings() {
+    std::string masini[]={"Street","Stock","Drift"};
+    std::string pneuri[]={"Standard","Slick","SemiS"};
+    std::string motoare[]={"Stock", "Sport","Drift"};
+
+    carOptionText.setString("Masina: <"+ masini[selectedCar-1]+">");
+    tireOptionText.setString("Pneuri: <"+ pneuri[selectedTire-1]+">");
+    motorOptionText.setString("Motor: <"+ motoare[selectedMotor-1]+">");
 }
 
 // bucla principala
@@ -152,6 +203,11 @@ void Meniujoc::processEvents() {
                 if (event.type == sf::Event::KeyReleased)
                     masina.handleInput(event.key.code, false);
                 break;
+            case GameState::Configuration:
+                if (event.type==sf::Event::MouseButtonPressed && event.mouseButton.button==sf::Mouse::Left) {
+                    handleConfigClick({static_cast<float>(event.mouseButton.x), static_cast<float>(event.mouseButton.y)});
+                }
+                break;
             case GameState::Paused:
                 break;
             case GameState::Exiting:
@@ -184,10 +240,19 @@ void Meniujoc::render() {
             window.draw(gameTitleText);
         window.draw(startButton);
         window.draw(startButtonText);
+        window.draw(configButton);
+        window.draw(configButtonText);
         window.draw(exitButton);
         window.draw(exitButtonText);
         break;
-
+        case GameState::Configuration:
+            window.draw(configTitle);
+            window.draw(carOptionText);
+            window.draw(tireOptionText);
+            window.draw(motorOptionText);
+            window.draw(backButton);
+            window.draw(backButtonText);
+            break;
         case GameState::Playing:
         case GameState::Paused:
             masina.draw(window);
@@ -201,7 +266,6 @@ void Meniujoc::render() {
         break;
         
         case GameState::Exiting:
-            break;
         default:
             break;
 
@@ -214,9 +278,12 @@ void Meniujoc::render() {
 void Meniujoc::handleMenuClick(sf::Vector2f mousePos) {
     if (startButton.getGlobalBounds().contains(mousePos)) {
         std::cout << "START!\n";
-        setupMasinaFromConsole();
+        setupMasinaFromSelection();
         gameClock.restart();
         gameState = GameState::Playing;
+    }
+    if (configButton.getGlobalBounds().contains(mousePos)) {
+        gameState = GameState::Configuration;
     }
 
     if (exitButton.getGlobalBounds().contains(mousePos)) {
@@ -224,19 +291,36 @@ void Meniujoc::handleMenuClick(sf::Vector2f mousePos) {
         window.close();
     }
 }
+void Meniujoc::handleConfigClick(sf::Vector2f mousePos) {
+    if (carOptionText.getGlobalBounds().contains(mousePos)) {
+        selectedCar=(selectedCar%3)+1;
+    }
+    if (tireOptionText.getGlobalBounds().contains(mousePos)) {
+        selectedTire=(selectedTire%3)+1;
+    }
+    if (motorOptionText.getGlobalBounds().contains(mousePos)) {
+        selectedMotor=(selectedMotor%3)+1;
+    }
+    if (backButton.getGlobalBounds().contains(mousePos)) {
+        gameState = GameState::MainMenu;
+    }
+
+    updateConfigStrings();
+}
+
 void Meniujoc::restartGame() {
     std::cout << "Restart"<<std::endl;
-    setupMasinaFromConsole();
+    setupMasinaFromSelection();
     gameClock.restart();
 }
 
 //actual setup din file
-void Meniujoc::setupMasinaFromConsole() {
+void Meniujoc::setupMasinaFromSelection() {
 
-    int alegemasina = 1;
-    int alegepneu = 1;
-    int alegemotor = 1;
-    std::cout<<"Alege tip masina: 1=Street, 2=Stock, 3=Drift\n";
+    int alegemasina = selectedCar;
+    int alegepneu = selectedTire;
+    int alegemotor = selectedMotor;
+    /*std::cout<<"Alege tip masina: 1=Street, 2=Stock, 3=Drift\n";
     std::cout << "Alege tip pneuri: 1=Standard, 2=Slick, 3=SemiS\n";
     std::ifstream file("tastatura.txt");
     if (!file.is_open()) {
@@ -256,6 +340,7 @@ void Meniujoc::setupMasinaFromConsole() {
         }
         file.close();
     }
+    */
     Masina::TipMasina tipMasina;
     std::vector<Pneu> pneuri;
     sf::Color masinaColor; // culoare implicita
@@ -263,23 +348,23 @@ void Meniujoc::setupMasinaFromConsole() {
     switch (alegemasina) {
         case 1:
             tipMasina=Masina::TipMasina::Street;
-            pneuri={ Pneu(Pneu::TipPneu::Standard,0.0f), /*...*/ };
+           // pneuri={ Pneu(Pneu::TipPneu::Standard,0.0f), /*...*/ };
            masinaColor = sf::Color::Blue;
             break;
         case 2:
             tipMasina=Masina::TipMasina::Stock;
-            pneuri={ Pneu(Pneu::TipPneu::Slick,0.0f), /*...*/ };
+           // pneuri={ Pneu(Pneu::TipPneu::Slick,0.0f), /*...*/ };
             masinaColor = sf::Color::Yellow;
             break;
         case 3:
             tipMasina=Masina::TipMasina::Drift;
-            pneuri={ Pneu(Pneu::TipPneu::SemiS,0.0f), /*...*/ };
+           // pneuri={ Pneu(Pneu::TipPneu::SemiS,0.0f), /*...*/ };
             masinaColor = sf::Color::Magenta;
             break;
         default:
             std::cout<<"invalid\n";
             tipMasina=Masina::TipMasina::Street;
-            pneuri={ Pneu(Pneu::TipPneu::Standard,0.0f), /*...*/ };
+           // pneuri={ Pneu(Pneu::TipPneu::Standard,0.0f), /*...*/ };
             masinaColor = sf::Color::Red;
             break;
     }
@@ -314,8 +399,9 @@ void Meniujoc::setupMasinaFromConsole() {
     for (int i = 0; i < 4; ++i) {
         pneuri.emplace_back(tipPneu, 0.0f);
     }
-    masina= Masina(tipMasina,0.0f,pneuri,tipMotor);
+    masina = Masina(tipMasina,0.0f,pneuri,tipMotor);
     masina.initGraphics(sf::Vector2f(window.getSize() / 2u), masinaColor,font);
+    std::cout<<"setup actual:"<<alegemasina<<alegepneu<<alegemotor<<std::endl;
 }
 
 /*void Meniujoc::afisare() const {

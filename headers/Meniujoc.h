@@ -11,7 +11,7 @@
 
 class Meniujoc {
 public:
-    enum class GameState{MainMenu,Playing,Paused,Exiting};
+    enum class GameState{MainMenu,Playing,Paused,Configuration,Exiting};
     Meniujoc();
     void run();
     //Masina& getMasina()
@@ -25,12 +25,24 @@ private:
     sf::RectangleShape startButton;
     sf::Text startButtonText;
 
+    sf::RectangleShape configButton;
+    sf::Text configButtonText;
+
     sf::RectangleShape exitButton;
     sf::Text exitButtonText;
 
+    sf::Text configTitle;
+    sf::Text carOptionText;
+    sf::Text tireOptionText;
+    sf::Text motorOptionText;
+    sf::RectangleShape backButton;
+    sf::Text backButtonText;
+    int selectedCar=1;
+    int selectedTire=1;
+    int selectedMotor=1;
+
     sf::Texture backgroundTexture;
     sf::Sprite backgroundSprite;
-
     sf::Text tirewarningtxt;
     sf::RectangleShape fadeOverlay;
     sf::Text gameTitleText;
@@ -46,8 +58,11 @@ private:
     //functie loop render
     void render();
     void setupMenu(); // init
+    void setupConfigMenu();
     void handleMenuClick(sf::Vector2f mousePos);
-    void setupMasinaFromConsole();
+    void handleConfigClick(sf::Vector2f mousePos);
+    void updateConfigStrings();
+    void setupMasinaFromSelection();
     void restartGame();
     //void afisare() const;
     friend std::ostream& operator<<(std::ostream& os, const Meniujoc& joc);

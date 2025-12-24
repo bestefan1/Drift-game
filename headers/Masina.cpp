@@ -7,7 +7,7 @@
 #include <cmath>
 #include <ranges>
 Masina::Masina(TipMasina tip_parametru, float viteza_parametru, const std::vector<Pneu> &pneuri_parametru, Motor::TipMotor tip_motor_parametru):
-tip(tip_parametru), viteza(viteza_parametru), pneuri(pneuri_parametru), motor(tip_motor_parametru), velocity{0.f, 0.f}, isMovingUp(false), isMovingDown(false), isMovingLeft(false), isMovingRight(false)
+tip(tip_parametru), viteza(viteza_parametru), pneuri(pneuri_parametru), motor(tip_motor_parametru), velocity{0.f, 0.f},steeringAngle(0.0f), isMovingUp(false), isMovingDown(false), isMovingLeft(false), isMovingRight(false)
 {
 }
 
@@ -45,30 +45,52 @@ void Masina::handleInput(sf::Keyboard::Key key, bool isPressed) {
         isMovingRight = isPressed;
 }
 void Masina::update(sf::Time dt, sf::Vector2u windowBounds) {
-    sf::Vector2f movement(0.f, 0.f);
+    //sf::Vector2f movement(0.f, 0.f);
+    //float steeringspeed=150.f;
+    float seconds=dt.asSeconds();
+    if (isMovingLeft) {
+        steeringAngle-=steerSpeed*seconds;
+    }
+    else if (isMovingRight) {
+        steeringAngle+=steerSpeed*seconds;
+    } else {
+        if (steeringAngle > 2.0f) steeringAngle -= steerSpeed*seconds;
+        else if (steeringAngle < -2.0f) steeringAngle += steerSpeed*seconds;
+        else steeringAngle = 0;
+    }
+    if (steeringAngle > maxSteer) steeringAngle = maxSteer;
+    if (steeringAngle < -maxSteer) steeringAngle = -maxSteer;
+
+    float speed=std::sqrt(velocity.x*velocity.x + velocity.y*velocity.y);
+    if (speed>10.f) {
+        float factorRotatie=(steeringAngle*(speed/450.f));
+        shape.rotate(factorRotatie*seconds*15.f);
+    }
+    float angleRad=(shape.getRotation()-90.f)*3.14159f/180.f;
+    sf::Vector2f facingDir(std::cos(angleRad), std::sin(angleRad));
+
+    //sf::Vector2f accelerationForce(0.f,0.f);
+    float enginePower=motor.getCoefAcceleratie()*300.0f;
+
     if (isMovingUp)
-        movement.y -= 1.f;
+        velocity += facingDir*enginePower*seconds;
     if (isMovingDown)
-        movement.y += 1.f;
-    if (isMovingLeft)
-        movement.x -= 1.f;
-    if (isMovingRight)
-        movement.x += 1.f;
-
-    // incetinire pe diagonala
-    float length = std::sqrt(movement.x * movement.x + movement.y * movement.y);
-    if (length != 0)
-        movement /= length;
-
+        velocity -= facingDir*(enginePower*0.5f)*seconds;
     //aceleratie
-    velocity += movement * (motor.getCoefAcceleratie()*35.0f) * dt.asSeconds();
-    sf::Vector2f frameMovement = velocity * dt.asSeconds();
-    float distance = std::sqrt(frameMovement.x * frameMovement.x + frameMovement.y * frameMovement.y);
-    deplasarep(distance);
-    //drag
-    velocity -= velocity * dragFactor * dt.asSeconds();
+    //velocity += accelerationForce*dt.asSeconds();
+    float forwardSpeed= velocity.x*facingDir.x+velocity.y*facingDir.y;
+    sf::Vector2f sideDir(-facingDir.y,facingDir.x);
+    float sidewaysSpeed=velocity.x*sideDir.x+velocity.y*sideDir.y;
 
-    shape.move(velocity * dt.asSeconds());
+    float lateralGrip=0.94f;
+    velocity = facingDir * forwardSpeed + sideDir * (sidewaysSpeed * lateralGrip);
+    velocity -= velocity*dragFactor*dt.asSeconds();
+
+    sf::Vector2f frameMovement=velocity*dt.asSeconds();
+    shape.move(frameMovement);
+
+    float distance=std::sqrt(frameMovement.x*frameMovement.x+frameMovement.y*frameMovement.y);
+    deplasarep(distance);
 
     // respectare margini
     sf::Vector2f pos = shape.getPosition();

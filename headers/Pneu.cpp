@@ -29,9 +29,9 @@ std::string Pneu::getTipAsString() const {
 void Pneu::degradare(float distanta) {
     float coef=1.0f;
     switch (tip) {
-        case TipPneu::Slick: coef=2.0f; break;
-        case TipPneu::Standard: coef=1.0f; break;
-        case TipPneu::SemiS: coef=1.5f; break;
+        case TipPneu::Slick: coef=0.015f; break;
+        case TipPneu::Standard: coef=0.003f; break;
+        case TipPneu::SemiS: coef=0.001; break;
     }
     uzura+=distanta*coef;
     if (uzura>100.0f) uzura=100.0f;
