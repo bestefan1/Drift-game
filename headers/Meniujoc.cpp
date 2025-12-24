@@ -141,9 +141,9 @@ void Meniujoc::setupConfigMenu() {
     updateConfigStrings();
 }
 void Meniujoc::updateConfigStrings() {
-    std::string masini[]={"Street","Stock","Drift"};
-    std::string pneuri[]={"Standard","Slick","SemiS"};
-    std::string motoare[]={"Stock", "Sport","Drift"};
+    static const std::string masini[]={"Street","Stock","Drift"};
+    static const std::string pneuri[]={"Standard","Slick","SemiS"};
+    static const std::string motoare[]={"Stock", "Sport","Drift"};
 
     carOptionText.setString("Masina: <"+ masini[selectedCar-1]+">");
     tireOptionText.setString("Pneuri: <"+ pneuri[selectedTire-1]+">");
