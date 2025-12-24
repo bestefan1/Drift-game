@@ -7,7 +7,7 @@
 #include <cmath>
 #include <ranges>
 Masina::Masina(TipMasina tip_parametru, float viteza_parametru, const std::vector<Pneu> &pneuri_parametru, Motor::TipMotor tip_motor_parametru):
-tip(tip_parametru), viteza(viteza_parametru), pneuri(pneuri_parametru), motor(tip_motor_parametru), velocity{0.f, 0.f},steeringAngle(0.0f), isMovingUp(false), isMovingDown(false), isMovingLeft(false), isMovingRight(false)
+tip(tip_parametru), viteza(viteza_parametru), pneuri(pneuri_parametru), motor(tip_motor_parametru),steeringAngle(0.0f), velocity{0.f, 0.f}, isMovingUp(false), isMovingDown(false), isMovingLeft(false), isMovingRight(false)
 {
 }
 
