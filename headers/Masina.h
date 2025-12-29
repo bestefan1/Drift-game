@@ -26,6 +26,7 @@ class Masina {
     void draw(sf::RenderWindow& window) const;
     //[[nodiscard]] bool isMoving() const;
     [[nodiscard]] std::string getTipAsString() const;
+    sf::Vector2f getPosition() const;
     private:
     TipMasina tip;
     float viteza;

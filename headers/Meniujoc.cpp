@@ -1,12 +1,17 @@
 #include "Meniujoc.h"
+#include "Exceptiijoc.h"
 #include <iostream>
 #include <vector>
 #include <sstream>
 #include <fstream>
 #include <iomanip>
 #include <ostream>
+int Meniujoc::nrAccidente=0;
 Meniujoc::Meniujoc()
-    : window(sf::VideoMode(800, 600), "Drift Game"),
+    :   gameView(sf::FloatRect(0,0,800.f,600.f)),
+        hartaLimite(2500.f,2500.f),
+        fundalharta(hartaLimite),
+        window(sf::VideoMode(800, 600), "Drift Game"),
         gameState(GameState::MainMenu),
        masina(Masina::TipMasina::Street, 0.0f,
              { Pneu(Pneu::TipPneu::Standard, 0.0f), Pneu(Pneu::TipPneu::Standard, 0.0f),
@@ -15,9 +20,7 @@ Meniujoc::Meniujoc()
 {
     window.setFramerateLimit(30);
     if (!font.loadFromFile("fonts/arial.ttf")) {
-        std::cerr << "Fontul nu a fost incarcat\n";
-        gameState = GameState::Exiting;
-        return;
+        throw Assetnotfounderror("fonts/arial.ttf");
     }
     //titlu
     gameTitleText.setFont(font);
@@ -65,6 +68,9 @@ Meniujoc::Meniujoc()
     pauseText.setOrigin(pauseRect.left + pauseRect.width / 2.0f,
                         pauseRect.top + pauseRect.height / 2.0f);
     pauseText.setPosition(static_cast<float>(window.getSize().x) / 2.0f, static_cast<float>(window.getSize().y) / 2.0f);
+    fundalharta.setFillColor(sf::Color(60,60,60));
+    fundalharta.setOutlineThickness(20.f);
+    fundalharta.setOutlineColor(sf::Color::Red);
 
     masina.initGraphics({400, 300}, sf::Color::Red,font);
 }
@@ -222,13 +228,36 @@ void Meniujoc::processEvents() {
 
 void Meniujoc::update(sf::Time dt) {
     if (gameState == GameState::Playing) {
-        masina.update(dt, window.getSize());
-
-        sf::Time elapsed = gameClock.getElapsedTime();
-        std::stringstream ss;
-        ss << "Timp: " << std::fixed << std::setprecision(1) << elapsed.asSeconds() << "s";
-        timerText.setString(ss.str());
-    }
+       try {
+           masina.update(dt, sf::Vector2u(static_cast<unsigned int>(hartaLimite.x),
+            static_cast<unsigned int>(hartaLimite.y)));
+           if (masina.verificarepneu()) {
+               throw Vehicledamageerror("Pneuri");
+           }
+           sf::Vector2f pos=masina.getPosition();
+           if (pos.x<-100 || pos.y<-100 || pos.x>hartaLimite.x+100 || pos.y>hartaLimite.y+100) {
+               throw Mapboundserror();
+           }
+           gameView.setCenter(masina.getPosition());
+           sf::Time elapsed = gameClock.getElapsedTime();
+           std::stringstream ss;
+           ss << "Timp: " << std::fixed << std::setprecision(1) << elapsed.asSeconds() << "s";
+           timerText.setString(ss.str());
+       }
+           catch (const Mapboundserror& e) {
+                nrAccidente++;
+               std::cerr <<"Accident:"<< e.what()<<std::endl;
+               restartGame();
+           }
+           catch (const Vehicledamageerror& e) {
+               std::cerr<<"Eroare:"<<e.what()<<std::endl;
+               nrAccidente++;
+               render();
+               sf::sleep(sf::seconds(3.0f));
+               gameState = GameState::MainMenu;
+               gameClock.restart();
+           }
+       }
 }
 
 
@@ -255,7 +284,10 @@ void Meniujoc::render() {
             break;
         case GameState::Playing:
         case GameState::Paused:
+            window.setView(gameView);
+            window.draw(fundalharta);
             masina.draw(window);
+        window.setView(window.getDefaultView());
         window.draw(timerText);
         if (masina.verificarepneu()) {
             window.draw(tirewarningtxt);
@@ -431,4 +463,7 @@ std::ostream& operator<<(std::ostream& os, const Meniujoc& joc) {
     os<<"\n\n";
     os<<joc.masina;
 return os;
+}
+int Meniujoc::getNrAccidente() {
+    return nrAccidente;
 }

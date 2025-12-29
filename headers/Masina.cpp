@@ -1,8 +1,5 @@
-//
-// Created by Stefan King on 10/26/2025.
-//
-
 #include "Masina.h"
+#include "Exceptiijoc.h"
 #include <iostream>
 #include <cmath>
 #include <ranges>
@@ -167,6 +164,9 @@ void Masina::acceleratie(float coeficient) {
 void Masina::franare(float coeficient) {
     viteza-=coeficient;
     if (viteza<0) viteza=0;
+}
+sf::Vector2f Masina::getPosition() const {
+    return shape.getPosition();
 }
 std::ostream& operator<<(std::ostream& os, const Masina& m) {
     os<<"Masina tip: "<<m.getTipAsString()<<"\n";

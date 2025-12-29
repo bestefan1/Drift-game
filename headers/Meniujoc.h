@@ -6,6 +6,7 @@
 #define MENIUJOC_H
 #pragma once
 #include "Masina.h"
+#include "Exceptiijoc.h"
 #include <SFML/Graphics.hpp>
 //#include <vector>
 
@@ -14,10 +15,14 @@ public:
     enum class GameState{MainMenu,Playing,Paused,Configuration,Exiting};
     Meniujoc();
     void run();
+    static int getNrAccidente();
     //Masina& getMasina()
     //{return masina;}
 //    void afisare() const;
 private:
+    sf::View gameView;
+    sf::Vector2f hartaLimite;
+    sf::RectangleShape fundalharta;
     sf::RenderWindow window;
     sf::Font font;
     GameState gameState;
@@ -50,6 +55,7 @@ private:
     sf::Clock gameClock;
     sf::Text pauseText;
     Masina masina;
+    static int nrAccidente;
     void processEvents();
 
     //functie loop

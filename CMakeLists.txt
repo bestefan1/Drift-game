@@ -67,6 +67,8 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         headers/Pneu.h
         headers/Motor.cpp
         headers/Motor.h
+        headers/Exceptiijoc.h
+        headers/Exceptiijoc.cpp
 )
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )
