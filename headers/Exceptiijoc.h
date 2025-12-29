@@ -10,7 +10,7 @@ class Driftgameerror : public std::exception
   protected:
     std::string message;
    public:
-     explicit Driftgameerror(const std::string m);
+     explicit Driftgameerror(const std::string& m);
      virtual ~Driftgameerror() noexcept = default;
      const char* what() const noexcept override;
 };

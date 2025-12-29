@@ -1,6 +1,6 @@
 #include "Exceptiijoc.h"
 
-Driftgameerror::Driftgameerror(std::string m) : message(std::move(m)) {}
+Driftgameerror::Driftgameerror(const std::string& m) : message(std::move(m)) {}
 
 const char* Driftgameerror::what() const noexcept {
   return message.c_str();
