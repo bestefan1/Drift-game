@@ -4,7 +4,7 @@
 #include <cmath>
 #include <ranges>
 Masina::Masina(TipMasina tip_parametru, float viteza_parametru, const std::vector<Pneu> &pneuri_parametru, Motor::TipMotor tip_motor_parametru):
-tip(tip_parametru), viteza(viteza_parametru), pneuri(pneuri_parametru), motor(tip_motor_parametru),steeringAngle(0.0f), velocity{0.f, 0.f}, isMovingUp(false), isMovingDown(false), isMovingLeft(false), isMovingRight(false)
+tip(tip_parametru), viteza(viteza_parametru), pneuri(pneuri_parametru), motor(tip_motor_parametru),steeringAngle(0.0f), velocity{0.f, 0.f}, isMovingUp(false), isMovingDown(false), isMovingLeft(false), isMovingRight(false), scor(0),lateralGrip(0.94f)
 {
 }
 
@@ -79,8 +79,11 @@ void Masina::update(sf::Time dt, sf::Vector2u windowBounds) {
     sf::Vector2f sideDir(-facingDir.y,facingDir.x);
     float sidewaysSpeed=velocity.x*sideDir.x+velocity.y*sideDir.y;
 
-    float lateralGrip=0.94f;
     velocity = facingDir * forwardSpeed + sideDir * (sidewaysSpeed * lateralGrip);
+    if (this->lateralGrip<0.94f) {
+        this->lateralGrip+=0.15f*seconds;
+        if (this->lateralGrip>0.94f) this->lateralGrip=0.94f;
+    }
     velocity -= velocity*dragFactor*dt.asSeconds();
 
     sf::Vector2f frameMovement=velocity*dt.asSeconds();
@@ -177,5 +180,20 @@ std::ostream& operator<<(std::ostream& os, const Masina& m) {
     }
     return os;
 }
-
+void Masina::adaugaScor(int puncte) {
+    this->scor+=(puncte);
+}
+void Masina::modificaViteza(float factor) {
+    this->velocity*=factor;
+    this->viteza*=factor;
+}
+sf::FloatRect Masina::getBounds() const {
+    return shape.getGlobalBounds();
+}
+void Masina::setGrip(float noulGrip) {
+    this->lateralGrip=noulGrip;
+}
+void Masina::actualizareInterfata(sf::Text &textscor) const {
+    textscor.setString("Scor: "+std::to_string(scor));
+}
 

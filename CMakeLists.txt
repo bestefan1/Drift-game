@@ -69,6 +69,14 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         headers/Motor.h
         headers/Exceptiijoc.h
         headers/Exceptiijoc.cpp
+        headers/Elementharta.h
+        headers/Elementharta.cpp
+        headers/Banut.h
+        headers/Banut.cpp
+        headers/Pataulei.h
+        headers/Pataulei.cpp
+        headers/Jalon.h
+        headers/Jalon.cpp
 )
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )

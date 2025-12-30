@@ -6,16 +6,22 @@
 #define MENIUJOC_H
 #pragma once
 #include "Masina.h"
+#include "Elementharta.h"
 #include "Exceptiijoc.h"
 #include <SFML/Graphics.hpp>
-//#include <vector>
+#include <vector>
 
 class Meniujoc {
 public:
-    enum class GameState{MainMenu,Playing,Paused,Configuration,Exiting};
+    enum class GameState{MainMenu,Playing,Paused,Configuration,Gameover,Exiting};
     Meniujoc();
     void run();
     static int getNrAccidente();
+    Meniujoc(const Meniujoc& alte);
+    Meniujoc& operator=(Meniujoc alte);
+    friend void swap(Meniujoc& prima,Meniujoc& adoua) noexcept;
+    void genereazaHarta();
+    void updateObiecte();
     //Masina& getMasina()
     //{return masina;}
 //    void afisare() const;
@@ -55,7 +61,13 @@ private:
     sf::Clock gameClock;
     sf::Text pauseText;
     Masina masina;
+    sf::Text scoreText;
+    sf::Text collisionMsgText;
+    sf::Clock msgClock;
     static int nrAccidente;
+    sf::Text gameOverTitle;
+    sf::Text finalScoreText;
+    sf::Text restartInfoText;
     void processEvents();
 
     //functie loop
@@ -72,6 +84,7 @@ private:
     void restartGame();
     //void afisare() const;
     friend std::ostream& operator<<(std::ostream& os, const Meniujoc& joc);
+    std::vector<std::unique_ptr<Elementharta>> elementeHarta;
 };
 
 

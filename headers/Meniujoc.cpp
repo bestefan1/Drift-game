@@ -1,11 +1,18 @@
 #include "Meniujoc.h"
 #include "Exceptiijoc.h"
+#include "Elementharta.h"
+#include "Banut.h"
+#include "Jalon.h"
+#include "Pataulei.h"
+#include <algorithm>
 #include <iostream>
 #include <vector>
 #include <sstream>
 #include <fstream>
 #include <iomanip>
 #include <ostream>
+#include <random>
+#include <ctime>
 int Meniujoc::nrAccidente=0;
 Meniujoc::Meniujoc()
     :   gameView(sf::FloatRect(0,0,800.f,600.f)),
@@ -19,6 +26,7 @@ Meniujoc::Meniujoc()
 
 {
     window.setFramerateLimit(30);
+    genereazaHarta();
     if (!font.loadFromFile("fonts/arial.ttf")) {
         throw Assetnotfounderror("fonts/arial.ttf");
     }
@@ -68,10 +76,40 @@ Meniujoc::Meniujoc()
     pauseText.setOrigin(pauseRect.left + pauseRect.width / 2.0f,
                         pauseRect.top + pauseRect.height / 2.0f);
     pauseText.setPosition(static_cast<float>(window.getSize().x) / 2.0f, static_cast<float>(window.getSize().y) / 2.0f);
+
+    scoreText.setFont(font);
+    scoreText.setCharacterSize(24);
+    scoreText.setFillColor(sf::Color::Yellow);
+    scoreText.setPosition(650.f,10.f);
+
+    collisionMsgText.setFont(font);
+    collisionMsgText.setCharacterSize(40);
+    collisionMsgText.setFillColor(sf::Color::Transparent);
+    collisionMsgText.setStyle(sf::Text::Bold);
+    collisionMsgText.setPosition(250.f,70.f);
     fundalharta.setFillColor(sf::Color(60,60,60));
     fundalharta.setOutlineThickness(20.f);
     fundalharta.setOutlineColor(sf::Color::Red);
 
+    gameOverTitle.setFont(font);
+    gameOverTitle.setString("Cursa terminata!");
+    gameOverTitle.setCharacterSize(60);
+    gameOverTitle.setFillColor(sf::Color::Red);
+    gameOverTitle.setStyle(sf::Text::Bold);
+
+    sf::FloatRect goRect=gameOverTitle.getLocalBounds();
+    gameOverTitle.setOrigin(goRect.left + goRect.width / 2.0f,goRect.top+goRect.height/2.0f);
+    gameOverTitle.setPosition(400.f,200.f);
+
+    finalScoreText.setFont(font);
+    finalScoreText.setCharacterSize(40);
+    finalScoreText.setFillColor(sf::Color::White);
+
+    restartInfoText.setFont(font);
+    restartInfoText.setString("Apasa R pentru rastart/M pentru meniu principal/ESC pentru exit");
+    restartInfoText.setCharacterSize(20);
+    restartInfoText.setFillColor(sf::Color::Yellow);
+    restartInfoText.setPosition(220.f,450.f);
     masina.initGraphics({400, 300}, sf::Color::Red,font);
 }
 
@@ -219,6 +257,16 @@ void Meniujoc::processEvents() {
             case GameState::Exiting:
                 window.close();
                 break;
+            case GameState::Gameover:
+                if (event.type==sf::Event::KeyPressed && event.key.code==sf::Keyboard::R) {
+                    restartGame();
+                    gameState = GameState::Playing;
+                }
+                else if (event.key.code==sf::Keyboard::M) {
+                    restartGame();
+                    gameState = GameState::MainMenu;
+                }
+                break;
             default:
                 break;
         }
@@ -231,6 +279,11 @@ void Meniujoc::update(sf::Time dt) {
        try {
            masina.update(dt, sf::Vector2u(static_cast<unsigned int>(hartaLimite.x),
             static_cast<unsigned int>(hartaLimite.y)));
+           updateObiecte();
+           masina.actualizareInterfata(scoreText);
+           if (msgClock.getElapsedTime().asSeconds()>1.5f) {
+               collisionMsgText.setFillColor(sf::Color::Transparent);
+           }
            if (masina.verificarepneu()) {
                throw Vehicledamageerror("Pneuri");
            }
@@ -243,6 +296,15 @@ void Meniujoc::update(sf::Time dt) {
            std::stringstream ss;
            ss << "Timp: " << std::fixed << std::setprecision(1) << elapsed.asSeconds() << "s";
            timerText.setString(ss.str());
+          /* bool Banutiexista=false;
+           for (const auto& el:elementeHarta) {
+               if (dynamic_cast<Banut*>(el.get())){}
+               Banutiexista=true;
+               break;
+           }*/
+           if (elapsed.asSeconds() > 70.0f) {
+               gameState= GameState::Gameover;
+           }
        }
            catch (const Mapboundserror& e) {
                 nrAccidente++;
@@ -254,8 +316,8 @@ void Meniujoc::update(sf::Time dt) {
                nrAccidente++;
                render();
                sf::sleep(sf::seconds(3.0f));
-               gameState = GameState::MainMenu;
-               gameClock.restart();
+              // restartGame();
+               gameState = GameState::Gameover;
            }
        }
 }
@@ -286,9 +348,14 @@ void Meniujoc::render() {
         case GameState::Paused:
             window.setView(gameView);
             window.draw(fundalharta);
+            for (const auto& el: elementeHarta) {
+                el->draw(window);
+            }
             masina.draw(window);
         window.setView(window.getDefaultView());
         window.draw(timerText);
+        window.draw(scoreText);
+        window.draw(collisionMsgText);
         if (masina.verificarepneu()) {
             window.draw(tirewarningtxt);
         }
@@ -296,7 +363,14 @@ void Meniujoc::render() {
             window.draw(pauseText);
         }
         break;
-        
+        case GameState::Gameover:
+            window.setView(window.getDefaultView());
+            window.draw(gameOverTitle);
+            masina.actualizareInterfata(finalScoreText);
+            finalScoreText.setPosition(320.f,300.f);
+            window.draw(finalScoreText);
+            window.draw(restartInfoText);
+            break;
         case GameState::Exiting:
         default:
             break;
@@ -344,6 +418,7 @@ void Meniujoc::restartGame() {
     std::cout << "Restart"<<std::endl;
     setupMasinaFromSelection();
     gameClock.restart();
+    genereazaHarta();
 }
 
 //actual setup din file
@@ -466,4 +541,80 @@ return os;
 }
 int Meniujoc::getNrAccidente() {
     return nrAccidente;
+}
+Meniujoc::Meniujoc(const Meniujoc &alte):
+    gameView(alte.gameView),
+    hartaLimite(alte.hartaLimite),
+    fundalharta(alte.fundalharta),
+    window(),
+    font(alte.font),
+    gameState(alte.gameState),
+    masina(alte.masina)
+{
+    for (const auto& el:alte.elementeHarta) {
+     this->elementeHarta.push_back(el->clone());
+    }
+}
+void swap(Meniujoc& prima,Meniujoc& adoua) noexcept {
+    using std::swap;
+    swap(prima.elementeHarta,adoua.elementeHarta);
+    swap(prima.gameState, adoua.gameState);
+    swap(prima.masina, adoua.masina);
+    swap(prima.hartaLimite, adoua.hartaLimite);
+}
+Meniujoc& Meniujoc::operator=(Meniujoc alte) {
+    swap(*this,alte);
+    return *this;
+}
+void Meniujoc::updateObiecte() {
+    for (auto it=elementeHarta.begin(); it!=elementeHarta.end();) {
+        if (masina.getBounds().intersects((*it)->getBounds())) {
+            if (dynamic_cast<Banut*>(it->get())) {
+                collisionMsgText.setString("colectat");
+                collisionMsgText.setFillColor(sf::Color::Green);
+            }
+            else if (dynamic_cast<Jalon*>(it->get())) {
+                collisionMsgText.setString("ai lovit un jalon");
+                collisionMsgText.setFillColor(sf::Color::Red);
+            }
+            else if (dynamic_cast<Pataulei*>(it->get())) {
+                collisionMsgText.setString("derapaj");
+                collisionMsgText.setFillColor(sf::Color::Cyan);
+            }
+            msgClock.restart();
+            (*it)->aplicaefect(masina);
+            it=elementeHarta.erase(it);
+        }
+        else {
+            ++it;
+        }
+    }
+}
+void Meniujoc::genereazaHarta() {
+    elementeHarta.clear();
+    std::random_device rd;
+    std::mt19937 generator(rd());
+    std::uniform_real_distribution<float> distribX(100.f,2400.f);
+    std::uniform_real_distribution<float> distribY(100.f,2400.f);
+
+    std::uniform_int_distribution<int> distribTip(0,2);
+    std::uniform_int_distribution<int> distribCantitate(40,60);
+    int nrObiecte=distribCantitate(generator);
+    for (int i=0;i<nrObiecte;++i) {
+        sf::Vector2f pos(distribX(generator),distribY(generator));
+        switch(distribTip(generator)) {
+            case 0:
+                elementeHarta.push_back(std::make_unique<Banut>(pos));
+                break;
+            case 1:
+                elementeHarta.push_back(std::make_unique<Jalon>(pos));
+                break;
+            case 2:
+                elementeHarta.push_back(std::make_unique<Pataulei>(pos));
+                break;
+            default:
+                break;
+        }
+    }
+    std::cout<<"Nr. obiecte generate"<<nrObiecte;
 }

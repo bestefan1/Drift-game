@@ -27,6 +27,12 @@ class Masina {
     //[[nodiscard]] bool isMoving() const;
     [[nodiscard]] std::string getTipAsString() const;
     sf::Vector2f getPosition() const;
+    void adaugaScor(int puncte);
+    void actualizareInterfata(sf::Text& textscor) const;
+    void modificaViteza(float factor);
+    sf::FloatRect getBounds() const;
+    void setGrip(float noulGrip);
+
     private:
     TipMasina tip;
     float viteza;
@@ -48,6 +54,8 @@ class Masina {
     sf::Text masinaTipText;
     sf::Text pneuriTipText;
     friend std::ostream& operator<<(std::ostream& os, const Masina& m);
+    int scor=0;
+    float lateralGrip=0.94f;
 };
 
 
