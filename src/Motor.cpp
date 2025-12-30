@@ -20,6 +20,7 @@ Motor::Motor(TipMotor tip_parametru): tip(tip_parametru) {
             break;
     }
 }
+// cppcheck-suppress unusedFunction
 float Motor::getCoefAcceleratie() const {
     return(static_cast<float>(CP)*cuplu)/10000.0f;
 }

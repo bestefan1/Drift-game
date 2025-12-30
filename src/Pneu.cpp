@@ -26,6 +26,7 @@ std::string Pneu::getTipAsString() const {
     }
     return "Necunoscut";
 }
+// cppcheck-suppress unusedFunction
 void Pneu::degradare(float distanta) {
     float coef=1.0f;
     switch (tip) {
@@ -36,6 +37,7 @@ void Pneu::degradare(float distanta) {
     uzura+=distanta*coef;
     if (uzura>100.0f) uzura=100.0f;
 }
+// cppcheck-suppress unusedFunction
 bool Pneu::uzat() const {
     return uzura >=100.0f;
 }

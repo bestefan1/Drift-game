@@ -159,7 +159,10 @@ std::string Masina::getTipAsString() const {
 }
 */
 bool Masina::verificarepneu() const {
-    return std::ranges::any_of(pneuri,&Pneu::uzat);
+    for (const auto& p : pneuri) {
+        if (p.uzat()) return true;
+    }
+    return false;
 }
 void Masina::acceleratie(float coeficient) {
     viteza+=coeficient;
