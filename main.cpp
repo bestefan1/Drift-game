@@ -4,7 +4,7 @@ int main() {
     try {
         Meniujoc joc;
         joc.run();
-        std::cout<<"Statistica mapboundserror "<<Meniujoc::getNrAccidente<<std::endl;
+        std::cout<<"Statistica mapboundserror "<<Meniujoc::getNrAccidente()<<std::endl;
     }
     catch (const Assetnotfounderror& e) {
         std::cerr<<"Eroare"<<e.what()<<std::endl;
