@@ -4,6 +4,7 @@ int main() {
     try {
         Meniujoc joc;
         joc.run();
+        std::cout<<"Statistica mapboundserror "<<Meniujoc::getNrAccidente<<std::endl;
     }
     catch (const Assetnotfounderror& e) {
         std::cerr<<"Eroare"<<e.what()<<std::endl;
@@ -12,7 +13,6 @@ int main() {
     catch (const Driftgameerror& e) {
         std::cerr<<"Eroare"<<e.what()<<std::endl;
     }
-    std::cout<<"Statistica mapboundserror "<<Meniujoc::getNrAccidente<<std::endl;
     std::cout<<"Joc terminat.\n";
 
     //pentru alegere masina/pneuri se alege din consola
