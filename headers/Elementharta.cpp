@@ -8,6 +8,7 @@ Elementharta::Elementharta(sf::Vector2f pos, sf::Color culoare)
       forma.setPosition(pos);
       forma.setFillColor(culoare);
     }
+    // cppcheck-suppress unusedFunction
     void Elementharta::afisare(std::ostream& os) const{
         os << "[Element]";
         afisareVirtuala(os);

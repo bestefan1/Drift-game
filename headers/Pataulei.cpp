@@ -15,5 +15,5 @@ void Pataulei::afisareVirtuala(std::ostream& os) const{
 }
 void Pataulei::aplicaefect(Masina& masina){
   std::cout<<"Pataulei/derapaj"<<std::endl;
-  masina.modificaViteza(0.3f);
+  masina.setGrip(0.1f);
 }
