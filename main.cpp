@@ -12,6 +12,7 @@ int main() {
     catch (const Driftgameerror& e) {
         std::cerr<<"Eroare"<<e.what()<<std::endl;
     }
+    std::cout<<"Statistica mapboundserror "<<Meniujoc::getNrAccidente<<std::endl;
     std::cout<<"Joc terminat.\n";
 
     //pentru alegere masina/pneuri se alege din consola
