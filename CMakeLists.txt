@@ -59,24 +59,24 @@ endif()
 # NOTE: update executable name in .github/workflows/cmake.yml:25 when changing name here
 add_executable(${MAIN_EXECUTABLE_NAME}
     main.cpp
-        headers/Meniujoc.cpp
+        src/Meniujoc.cpp
+        src/Masina.cpp
+        src/Pneu.cpp
+        src/Motor.cpp
+        src/Exceptiijoc.cpp
+        src/Elementharta.cpp
+        src/Banut.cpp
+        src/Pataulei.cpp
+        src/Jalon.cpp
         headers/Meniujoc.h
-        headers/Masina.cpp
         headers/Masina.h
-        headers/Pneu.cpp
         headers/Pneu.h
-        headers/Motor.cpp
         headers/Motor.h
         headers/Exceptiijoc.h
-        headers/Exceptiijoc.cpp
         headers/Elementharta.h
-        headers/Elementharta.cpp
         headers/Banut.h
-        headers/Banut.cpp
         headers/Pataulei.h
-        headers/Pataulei.cpp
         headers/Jalon.h
-        headers/Jalon.cpp
 )
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )
@@ -92,7 +92,7 @@ target_link_libraries(${MAIN_EXECUTABLE_NAME} PRIVATE sfml-graphics sfml-window 
 
 # use SYSTEM so cppcheck and clang-tidy do not report warnings from these directories
 # target_include_directories(${MAIN_EXECUTABLE_NAME} SYSTEM PRIVATE ext/<SomeHppLib>/include)
-target_include_directories(${MAIN_EXECUTABLE_NAME} SYSTEM PRIVATE ${SFML_SOURCE_DIR}/include)
+target_include_directories(${MAIN_EXECUTABLE_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/headers SYSTEM PRIVATE ${SFML_SOURCE_DIR}/include)
 target_link_directories(${MAIN_EXECUTABLE_NAME} PRIVATE ${SFML_BINARY_DIR}/lib)
 target_link_libraries(${MAIN_EXECUTABLE_NAME} PRIVATE sfml-graphics sfml-window sfml-system Threads::Threads)
 
