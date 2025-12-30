@@ -12,7 +12,7 @@ class Motor {
 public:
     enum class TipMotor {Stock,Sport,Drift};
     explicit Motor(TipMotor tip=TipMotor::Stock);
-    float getCoefAcceleratie() const;
+    [[nodiscard]]float getCoefAcceleratie() const;
     [[nodiscard]] std::string getTipAsString() const;
 private:
     TipMotor tip;
