@@ -11,7 +11,7 @@ private:
     WeatherState currentState;
     sf::Vector2f windForce;
     float frictionMultiplier;
-    sf::Clock weatherClock;
+    float timer;
     float nextChangeTime;
 
     void updateWeatherEffects();

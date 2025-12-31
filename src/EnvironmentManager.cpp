@@ -32,11 +32,12 @@ void EnvironmentManager::updateWeatherEffects() {
 }
 
 void EnvironmentManager::update(sf::Time dt) {
-    if (weatherClock.getElapsedTime().asSeconds() > nextChangeTime) {
-        int next = rand() % 4;
-        currentState = static_cast<WeatherState>(next);
-        updateWeatherEffects();
-        weatherClock.restart();
+    timer+=dt.asSeconds();
+    if (timer >= nextChangeTime) {
+      int next=rand()%4;
+      currentState=static_cast<WeatherState>(next);
+      updateWeatherEffects();
+      timer=0.0f;
     }
 }
 
