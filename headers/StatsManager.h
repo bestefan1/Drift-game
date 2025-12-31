@@ -23,7 +23,8 @@ class StatsManager {
      bool deblocheazaMasinaDrift();
      int getBaniTotali() const {return baniTotali;}
      bool esteDriftDeblocat() const{return masinaDriftDeblocata;}
-
+     int getBanut() const;
+     void scadeBani(int suma);
      std::string getRezumatSesiune() const;
      void resetSesiune();
 };

@@ -45,6 +45,14 @@ void Masina::update(sf::Time dt, sf::Vector2u windowBounds) {
     //sf::Vector2f movement(0.f, 0.f);
     //float steeringspeed=150.f;
     float seconds=dt.asSeconds();
+    float multiplicatorPower=(nitroActiv)? 2.0f:1.0f;
+    if (nitroActiv) {
+        //multiplicatorPower = 1.8f;
+        nitroTimer-=seconds;
+        if (nitroTimer <= 0) {
+            nitroTimer = false;
+        }
+    }
     if (isMovingLeft) {
         steeringAngle-=steerSpeed*seconds;
     }
@@ -70,9 +78,10 @@ void Masina::update(sf::Time dt, sf::Vector2u windowBounds) {
     float enginePower=motor.getCoefAcceleratie()*300.0f;
 
     if (isMovingUp)
-        velocity += facingDir*enginePower*seconds;
+        velocity += facingDir*(enginePower*multiplicatorPower)*seconds;
     if (isMovingDown)
         velocity -= facingDir*(enginePower*0.5f)*seconds;
+    updateTrail(seconds);
     //aceleratie
     //velocity += accelerationForce*dt.asSeconds();
     float forwardSpeed= velocity.x*facingDir.x+velocity.y*facingDir.y;
@@ -120,8 +129,12 @@ void Masina::update(sf::Time dt, sf::Vector2u windowBounds) {
     halfSize = shape.getSize() / 2.f;
     masinaTipText.setPosition(pos.x - halfSize.x, pos.y - halfSize.y - 45);
     pneuriTipText.setPosition(pos.x - halfSize.x, pos.y - halfSize.y - 25);
+    updateTrail(seconds);
 }
 void Masina::draw(sf::RenderWindow &window) const {
+    for(const auto& p : trail) {
+        window.draw(p);
+    }
     window.draw(shape);
     window.draw(masinaTipText);
     window.draw(pneuriTipText);
@@ -203,4 +216,31 @@ void Masina::aplicaMediu(sf::Vector2f fortaVant, float modFrecare) {
     velocity+=fortaVant;
     this->lateralGrip=0.94f*modFrecare;
 }
+void Masina::activeazaNitro(float putere, float durata) {
+    this->nitroActiv = true;
+    this->nitroTimer = durata;
+    this->velocity *= putere;
+}
 
+void Masina::updateTrail(float dt) {
+    if (nitroActiv) {
+        sf::CircleShape punct(5.f);
+        punct.setPosition(shape.getPosition());
+        punct.setFillColor(sf::Color(0, 255, 255, 180));
+        trail.push_back(punct);
+
+        nitroTimer -= dt;
+        if (nitroTimer <= 0) nitroActiv = false;
+    }
+
+    for (auto it = trail.begin(); it != trail.end(); ) {
+        sf::Color c = it->getFillColor();
+        if (c.a > 10) {
+            c.a -= static_cast<sf::Uint8>(150 * dt);
+            it->setFillColor(c);
+            ++it;
+        } else {
+            it = trail.erase(it);
+        }
+    }
+}

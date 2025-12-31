@@ -35,6 +35,7 @@ class Masina {
     sf::Vector2f getVelocity() const {return velocity;}
     void aplicaMediu(sf::Vector2f fortaVant,float modFrecare);
 
+    void activeazaNitro(float putere, float durata);
     private:
     TipMasina tip;
     float viteza;
@@ -58,6 +59,10 @@ class Masina {
     friend std::ostream& operator<<(std::ostream& os, const Masina& m);
     int scor=0;
     float lateralGrip=0.94f;
+    bool nitroActiv = false;
+    float nitroTimer = 0.0f;
+    std::vector<sf::CircleShape> trail;
+    void updateTrail(float dt);
 };
 
 

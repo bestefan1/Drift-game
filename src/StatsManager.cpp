@@ -62,5 +62,13 @@ std::string StatsManager::getRezumatSesiune() const {
         <<"Bani totali:"<<baniTotali;
     return ss.str();
 }
-
+int StatsManager::getBanut() const {
+    return baniTotali;
+}
+void StatsManager::scadeBani(int suma) {
+    if (baniTotali>=suma) {
+        baniTotali-=suma;
+        salveazaProgres();
+    }
+}
 

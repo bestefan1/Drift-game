@@ -13,7 +13,7 @@ Elementharta::Elementharta(sf::Vector2f pos, sf::Color culoare)
         os << "[Element]";
         afisareVirtuala(os);
        }
-    void Elementharta::draw(sf::RenderWindow& window) const{
+    void Elementharta::draw(sf::RenderWindow& window) {
       window.draw(forma);
     }
     sf::FloatRect Elementharta::getBounds() const{

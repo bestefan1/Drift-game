@@ -14,7 +14,7 @@ class Elementharta {
       virtual std::unique_ptr<Elementharta> clone() const=0;
       void afisare(std::ostream& os) const;
       virtual void aplicaefect(Masina& masina)=0;
-      void draw(sf::RenderWindow& window) const;
+      virtual void draw(sf::RenderWindow& window) = 0;
       sf::FloatRect getBounds() const;
 };
 

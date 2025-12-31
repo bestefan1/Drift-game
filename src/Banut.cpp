@@ -16,3 +16,6 @@ void Banut::aplicaefect(Masina& masina) {
   masina.adaugaScor(10);
   std::cout << "Banut colectat" << std::endl;
 }
+void Banut::draw(sf::RenderWindow& window) {
+  window.draw(forma);
+}

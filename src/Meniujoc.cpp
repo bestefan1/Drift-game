@@ -111,6 +111,11 @@ Meniujoc::Meniujoc()
     weatherOverlay.setSize(hartaLimite);
     weatherOverlay.setPosition(0,0);
 
+    shopText.setFont(font);
+    shopText.setCharacterSize(22);
+    shopText.setFillColor(sf::Color::Yellow);
+    shopText.setPosition(100.f, 450.f);
+
     sf::FloatRect goRect=gameOverTitle.getLocalBounds();
     gameOverTitle.setOrigin(goRect.left + goRect.width / 2.0f,goRect.top+goRect.height/2.0f);
     gameOverTitle.setPosition(400.f,200.f);
@@ -265,6 +270,7 @@ void Meniujoc::processEvents() {
                 if (event.type==sf::Event::MouseButtonPressed && event.mouseButton.button==sf::Mouse::Left) {
                     handleConfigClick({static_cast<float>(event.mouseButton.x), static_cast<float>(event.mouseButton.y)});
                 }
+                handleShopInput(event);
                 break;
             case GameState::Paused:
                 break;
@@ -292,6 +298,10 @@ void Meniujoc::update(sf::Time dt) {
     if (gameState == GameState::Playing) {
        try {
            env.update(dt);
+           if (nitroDeblocat && sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+               masina.activeazaNitro(1.8f, 3.0f);
+               nitroDeblocat = false;
+           }
            masina.aplicaMediu(env.getWindForce()*dt.asSeconds(),env.getFrictionModifier());
            weatherText.setString("Vreme:"+ env.getWeatherName());
            weatherOverlay.setFillColor(env.getWeatherColor());
@@ -363,7 +373,10 @@ void Meniujoc::render() {
             window.draw(motorOptionText);
             window.draw(backButton);
             window.draw(backButtonText);
-
+            if (!nitroDeblocat) {
+            shopText.setString("Nitro Upgrade: 700 Banuti (Ai: " + std::to_string(stats.getBanut()) + ")\n[N] - Cumpara");
+            }
+            window.draw(shopText);
             if (errorClock.getElapsedTime().asSeconds()<2.0f) {
                 window.draw(errormsgtext);
             } else {
@@ -680,4 +693,17 @@ void Meniujoc::genereazaHarta() {
         }
     }
     std::cout<<"Nr. obiecte generate"<<nrObiecte;
+}
+void Meniujoc::handleShopInput(sf::Event& event) {
+    if (gameState == GameState::Configuration && event.type == sf::Event::KeyPressed) {
+        if (event.key.code == sf::Keyboard::N) {
+            int baniCurenti = stats.getBanut();
+            if (baniCurenti >= 700 && !nitroDeblocat) {
+                stats.scadeBani(700);
+                nitroDeblocat = true;
+                shopText.setString("Nitro: DEBLOCAT (Apasati SPACE in joc)");
+                shopText.setFillColor(sf::Color::Green);
+            }
+        }
+    }
 }

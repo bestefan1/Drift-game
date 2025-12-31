@@ -17,3 +17,6 @@ void Pataulei::aplicaefect(Masina& masina){
   std::cout<<"Pataulei/derapaj"<<std::endl;
   masina.setGrip(0.1f);
 }
+void Pataulei::draw(sf::RenderWindow& window) {
+  window.draw(forma);
+}

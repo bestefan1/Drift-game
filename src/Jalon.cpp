@@ -13,3 +13,6 @@ void Jalon::aplicaefect(Masina& masina){
   std::cout<<"Jalon lovit"<<std::endl;
   masina.modificaViteza(0.7f);
 }
+void Jalon::draw(sf::RenderWindow& window) {
+  window.draw(forma);
+}

@@ -15,7 +15,7 @@
 
 class Meniujoc {
 public:
-    enum class GameState{MainMenu,Playing,Paused,Configuration,Gameover,Exiting};
+    enum class GameState{MainMenu,Playing,Paused,Configuration,Shop,Gameover,Exiting};
     Meniujoc();
     void run();
     static int getNrAccidente();
@@ -90,6 +90,9 @@ private:
     void updateConfigStrings();
     void setupMasinaFromSelection();
     void restartGame();
+    bool nitroDeblocat = false;
+    sf::Text shopText;
+    void handleShopInput(sf::Event& event);
     //void afisare() const;
     friend std::ostream& operator<<(std::ostream& os, const Meniujoc& joc);
     std::vector<std::unique_ptr<Elementharta>> elementeHarta;
