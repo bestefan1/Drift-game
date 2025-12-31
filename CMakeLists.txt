@@ -68,6 +68,7 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         src/Banut.cpp
         src/Pataulei.cpp
         src/Jalon.cpp
+        src/StatsManager.cpp
         headers/Meniujoc.h
         headers/Masina.h
         headers/Pneu.h
@@ -77,6 +78,7 @@ add_executable(${MAIN_EXECUTABLE_NAME}
         headers/Banut.h
         headers/Pataulei.h
         headers/Jalon.h
+        headers/StatsManager.h
 )
 
 # NOTE: Add all defined targets (e.g. executables, libraries, etc. )

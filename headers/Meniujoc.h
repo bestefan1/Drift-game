@@ -7,6 +7,7 @@
 #pragma once
 #include "Masina.h"
 #include "Elementharta.h"
+#include "StatsManager.h"
 #include "Exceptiijoc.h"
 #include <SFML/Graphics.hpp>
 #include <vector>
@@ -68,6 +69,9 @@ private:
     sf::Text gameOverTitle;
     sf::Text finalScoreText;
     sf::Text restartInfoText;
+    StatsManager stats;
+    sf::Text errormsgtext;
+    sf::Clock errorClock;
     void processEvents();
 
     //functie loop

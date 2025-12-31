@@ -43,6 +43,12 @@ Meniujoc::Meniujoc()
                             titleRect.top + titleRect.height / 2.0f);
     gameTitleText.setPosition(static_cast<float>(window.getSize().x)/ 2.0f, 100.f);
 
+    errormsgtext.setFont(font);
+    errormsgtext.setCharacterSize(20);
+    errormsgtext.setFillColor(sf::Color::Transparent);
+    errormsgtext.setStyle(sf::Text::Bold);
+    errormsgtext.setPosition(300.f,400.f);
+
     //timer joc
     timerText.setFont(font);
     timerText.setString("Timp: 0.0s");
@@ -279,6 +285,7 @@ void Meniujoc::update(sf::Time dt) {
        try {
            masina.update(dt, sf::Vector2u(static_cast<unsigned int>(hartaLimite.x),
             static_cast<unsigned int>(hartaLimite.y)));
+           stats.update(masina.getVelocity(),dt.asSeconds());
            updateObiecte();
            masina.actualizareInterfata(scoreText);
            if (msgClock.getElapsedTime().asSeconds()>1.5f) {
@@ -318,6 +325,7 @@ void Meniujoc::update(sf::Time dt) {
                sf::sleep(sf::seconds(3.0f));
               // restartGame();
                gameState = GameState::Gameover;
+               stats.salveazaProgres();
            }
        }
 }
@@ -343,6 +351,12 @@ void Meniujoc::render() {
             window.draw(motorOptionText);
             window.draw(backButton);
             window.draw(backButtonText);
+
+            if (errorClock.getElapsedTime().asSeconds()<2.0f) {
+                window.draw(errormsgtext);
+            } else {
+                errormsgtext.setFillColor(sf::Color::Transparent);
+            }
             break;
         case GameState::Playing:
         case GameState::Paused:
@@ -363,13 +377,21 @@ void Meniujoc::render() {
             window.draw(pauseText);
         }
         break;
-        case GameState::Gameover:
+        case GameState::Gameover: {
             window.setView(window.getDefaultView());
             window.draw(gameOverTitle);
             masina.actualizareInterfata(finalScoreText);
             finalScoreText.setPosition(320.f,300.f);
             window.draw(finalScoreText);
             window.draw(restartInfoText);
+
+            sf::Text statsText;
+            statsText.setFont(font);
+            statsText.setString(stats.getRezumatSesiune());
+            statsText.setCharacterSize(18);
+            statsText.setPosition(320.f,350.f);
+            window.draw(statsText);
+        }
             break;
         case GameState::Exiting:
         default:
@@ -399,7 +421,31 @@ void Meniujoc::handleMenuClick(sf::Vector2f mousePos) {
 }
 void Meniujoc::handleConfigClick(sf::Vector2f mousePos) {
     if (carOptionText.getGlobalBounds().contains(mousePos)) {
-        selectedCar=(selectedCar%3)+1;
+       int nextCar=(selectedCar%3)+1;
+        if (nextCar==3) {
+            if (stats.esteDriftDeblocat()) {
+                selectedCar=3;
+            } else {
+                if (stats.deblocheazaMasinaDrift()) {
+                    std::cout<<"Masina Drift deblocata:";
+                    selectedCar=3;
+                    errormsgtext.setString("Masina Drift deblocata:");
+                    errormsgtext.setFillColor(sf::Color::Green);
+                    errorClock.restart();
+                } else {
+                    std::cout<<"Bani insuficienti, ai nevoie de 500.\n";
+                    errormsgtext.setString("Bani insuficienti, ai nevoie de 500.");
+                    errormsgtext.setFillColor(sf::Color::Red);
+                    errorClock.restart();
+                    selectedCar=1;
+
+                }
+
+            }
+        }
+            else {
+                selectedCar=nextCar;
+            }
     }
     if (tireOptionText.getGlobalBounds().contains(mousePos)) {
         selectedTire=(selectedTire%3)+1;
@@ -417,6 +463,8 @@ void Meniujoc::handleConfigClick(sf::Vector2f mousePos) {
 void Meniujoc::restartGame() {
     std::cout << "Restart"<<std::endl;
     setupMasinaFromSelection();
+    stats.resetSesiune();
+    stats.salveazaProgres();
     gameClock.restart();
     genereazaHarta();
 }
@@ -572,6 +620,7 @@ void Meniujoc::updateObiecte() {
             if (dynamic_cast<Banut*>(it->get())) {
                 collisionMsgText.setString("colectat");
                 collisionMsgText.setFillColor(sf::Color::Green);
+                stats.adaugaBanut();
             }
             else if (dynamic_cast<Jalon*>(it->get())) {
                 collisionMsgText.setString("ai lovit un jalon");
