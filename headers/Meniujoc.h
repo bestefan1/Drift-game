@@ -76,6 +76,9 @@ private:
     EnvironmentManager env;
     sf::Text weatherText;
     sf::RectangleShape weatherOverlay;
+    sf::RectangleShape carPreview;
+    float animTime=0.0f;
+    void updateAnimations(float dt);
     void processEvents();
 
     //functie loop

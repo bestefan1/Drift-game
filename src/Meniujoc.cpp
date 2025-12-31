@@ -124,6 +124,13 @@ Meniujoc::Meniujoc()
     finalScoreText.setCharacterSize(40);
     finalScoreText.setFillColor(sf::Color::White);
 
+    carPreview.setSize({60.f, 100.f});
+    carPreview.setOrigin(30.f, 50.f);
+    carPreview.setPosition(600.f, 300.f);
+    carPreview.setFillColor(sf::Color::Red);
+    carPreview.setOutlineThickness(3.f);
+    carPreview.setOutlineColor(sf::Color::White);
+
     restartInfoText.setFont(font);
     restartInfoText.setString("Apasa R pentru rastart/M pentru meniu principal/ESC pentru exit");
     restartInfoText.setCharacterSize(20);
@@ -295,6 +302,7 @@ void Meniujoc::processEvents() {
 
 
 void Meniujoc::update(sf::Time dt) {
+    updateAnimations(dt.asSeconds());
     if (gameState == GameState::Playing) {
        try {
            env.update(dt);
@@ -382,6 +390,7 @@ void Meniujoc::render() {
             } else {
                 errormsgtext.setFillColor(sf::Color::Transparent);
             }
+            window.draw(carPreview);
             break;
         case GameState::Playing:
         case GameState::Paused:
@@ -704,6 +713,35 @@ void Meniujoc::handleShopInput(sf::Event& event) {
                 shopText.setString("Nitro: DEBLOCAT (Apasati SPACE in joc)");
                 shopText.setFillColor(sf::Color::Green);
             }
+        }
+    }
+}
+void Meniujoc::updateAnimations(float dt) {
+    animTime += dt;
+
+    float offset = std::sin(animTime * 2.0f) * 10.0f;
+    gameTitleText.setPosition(400.f, 100.f + offset);
+
+    if (gameState == GameState::Configuration) {
+        carPreview.rotate(60.0f * dt);
+
+        if (selectedCar == 1) carPreview.setFillColor(sf::Color::Blue);
+        else if (selectedCar == 2) carPreview.setFillColor(sf::Color::Yellow);
+        else if (selectedCar == 3) carPreview.setFillColor(sf::Color::Magenta);
+    }
+    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+    sf::Vector2f mousePosF(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
+
+    std::vector<sf::RectangleShape*> butoaneMeniu = { &startButton, &configButton, &exitButton };
+
+    for (auto* buton : butoaneMeniu) {
+        if (buton->getGlobalBounds().contains(mousePosF)) {
+            buton->setOutlineThickness(3.f);
+            buton->setOutlineColor(sf::Color::Cyan);
+            buton->setScale(1.05f, 1.05f);
+        } else {
+            buton->setOutlineThickness(0.f);
+            buton->setScale(1.0f, 1.0f);
         }
     }
 }
