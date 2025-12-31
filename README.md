@@ -15,13 +15,15 @@ la succesul mult dorit!
 Pentru o experienta placuta de joc, acesta poate fi descoperit prin 
 urmatoarele controale:
 
-W,A,S,D-directie
+-W,A,S,D-directie
 
-R-restart
+-R-restart
 
-P-pauza
+-P-pauza
 
-Escape-iesire
+-Escape-iesire
+
+-N cumparare nitro, SPACE - activare nitro
 
 
 ### Tema 0
