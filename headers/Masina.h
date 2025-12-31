@@ -33,6 +33,8 @@ class Masina {
     sf::FloatRect getBounds() const;
     void setGrip(float noulGrip);
     sf::Vector2f getVelocity() const {return velocity;}
+    void aplicaMediu(sf::Vector2f fortaVant,float modFrecare);
+
     private:
     TipMasina tip;
     float viteza;

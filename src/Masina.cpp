@@ -199,4 +199,8 @@ void Masina::setGrip(float noulGrip) {
 void Masina::actualizareInterfata(sf::Text &textscor) const {
     textscor.setString("Scor: "+std::to_string(scor));
 }
+void Masina::aplicaMediu(sf::Vector2f fortaVant, float modFrecare) {
+    velocity+=fortaVant;
+    this->lateralGrip=0.94f*modFrecare;
+}
 

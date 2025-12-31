@@ -103,6 +103,14 @@ Meniujoc::Meniujoc()
     gameOverTitle.setFillColor(sf::Color::Red);
     gameOverTitle.setStyle(sf::Text::Bold);
 
+    weatherText.setFont(font);
+    weatherText.setCharacterSize(20);
+    weatherText.setPosition(10.f,40.f);
+    weatherText.setFillColor(sf::Color::White);
+
+    weatherOverlay.setSize(hartaLimite);
+    weatherOverlay.setPosition(0,0);
+
     sf::FloatRect goRect=gameOverTitle.getLocalBounds();
     gameOverTitle.setOrigin(goRect.left + goRect.width / 2.0f,goRect.top+goRect.height/2.0f);
     gameOverTitle.setPosition(400.f,200.f);
@@ -283,6 +291,10 @@ void Meniujoc::processEvents() {
 void Meniujoc::update(sf::Time dt) {
     if (gameState == GameState::Playing) {
        try {
+           env.update(dt);
+           masina.aplicaMediu(env.getWindForce()*dt.asSeconds(),env.getFrictionModifier());
+           weatherText.setString("Vreme:"+ env.getWeatherName());
+           weatherOverlay.setFillColor(env.getWeatherColor());
            masina.update(dt, sf::Vector2u(static_cast<unsigned int>(hartaLimite.x),
             static_cast<unsigned int>(hartaLimite.y)));
            stats.update(masina.getVelocity(),dt.asSeconds());
@@ -362,11 +374,13 @@ void Meniujoc::render() {
         case GameState::Paused:
             window.setView(gameView);
             window.draw(fundalharta);
+            window.draw(weatherOverlay);
             for (const auto& el: elementeHarta) {
                 el->draw(window);
             }
             masina.draw(window);
         window.setView(window.getDefaultView());
+        window.draw(weatherText);
         window.draw(timerText);
         window.draw(scoreText);
         window.draw(collisionMsgText);

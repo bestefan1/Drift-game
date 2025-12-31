@@ -8,6 +8,7 @@
 #include "Masina.h"
 #include "Elementharta.h"
 #include "StatsManager.h"
+#include "EnvironmentManager.h"
 #include "Exceptiijoc.h"
 #include <SFML/Graphics.hpp>
 #include <vector>
@@ -72,6 +73,9 @@ private:
     StatsManager stats;
     sf::Text errormsgtext;
     sf::Clock errorClock;
+    EnvironmentManager env;
+    sf::Text weatherText;
+    sf::RectangleShape weatherOverlay;
     void processEvents();
 
     //functie loop
