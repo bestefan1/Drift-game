@@ -719,9 +719,20 @@ void Meniujoc::handleShopInput(sf::Event& event) {
 void Meniujoc::updateAnimations(float dt) {
     animTime += dt;
 
+    sf::Uint8 r = static_cast<sf::Uint8>(127 + 127 * std::sin(animTime));
+    sf::Uint8 g = static_cast<sf::Uint8>(127 + 127 * std::sin(animTime + 2.09f));
+    sf::Uint8 b = static_cast<sf::Uint8>(127 + 127 * std::sin(animTime + 4.18f));
+    gameTitleText.setFillColor(sf::Color(r, g, b));
     float offset = std::sin(animTime * 2.0f) * 10.0f;
     gameTitleText.setPosition(400.f, 100.f + offset);
 
+    if (nitroDeblocat) {
+        float pulsare = (std::sin(animTime * 6.0f) + 1.0f) * 0.5f;
+        sf::Uint8 alpha = static_cast<sf::Uint8>(100 + 155 * pulsare);
+        shopText.setFillColor(sf::Color(0, 255, 0, alpha));
+        shopText.setOutlineThickness(1.0f + pulsare * 2.0f);
+        shopText.setOutlineColor(sf::Color(255, 255, 255, alpha));
+    }
     if (gameState == GameState::Configuration) {
         carPreview.rotate(60.0f * dt);
 
